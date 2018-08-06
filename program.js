@@ -51,6 +51,9 @@ const program = (view, model = {}, $root = document.getElementById("app")) => {
       else $el.setAttribute(name, node.prop[name])
     }
 
+    if (!(node.childs instanceof Array))
+      throw Error("node childs should be in an array...")
+
     node.childs
       .map(create)
       .forEach($el.appendChild.bind($el))
