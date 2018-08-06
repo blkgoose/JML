@@ -14,7 +14,7 @@ const router = (model) => {
       return Array.prototype.slice.call(
         this.querySelectorAll(selector)
       )
-    } catch { return [] }
+    } catch (_) { return [] }
   }
 
   const parseRoute = (hash, route) => {
@@ -26,20 +26,19 @@ const router = (model) => {
       hash = hash.split("/")
       route = route.split("/")
 
-      if (hash.length != route.length) {
+      if (hash.length != route.length)
         return false
-      }
       let data = {}
 
-      route
-        .forEach(
-          (x, i) => {
-            if (x.indexOf("?") == 0)
-              data[x.substr(1)] = hash[i]
-            else
-              if (x != hash[i]) return false
-          })
+      for (let i in route) {
+        let x = route[i]
 
+        if (x.indexOf("?") == 0)
+          data[x.substr(1)] = hash[i]
+        else
+          if (x != hash[i])
+            return false
+      }
       return data
     }
   }
@@ -56,6 +55,7 @@ const router = (model) => {
 
     for (let i in routes) {
       let e = routes[i]
+
       let hash = window.location.hash.substr(1)
       let route = e.getAttribute("when")
       let parsedRoute
