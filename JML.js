@@ -30,9 +30,9 @@ const IF = (cond, trueFN, falseFN = text()) => cond ? trueFN : falseFN
 // functions
 const goto = (route) =>
   window.location =
-  window.location.href.replace(window.location.hash, "").replace(/#$/, '')
+  window.location.href.replace(window.location.hash, "").replace(RegExp("#$"), '')
   + "#/"
-  + route.replace(/^\//, '')
+  + route.replace(RegExp("^/"), '')
 
 const range = (from, to, skip = 1) => {
   return [...Array(to || from).keys()]
