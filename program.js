@@ -2,13 +2,6 @@
 
 let oldView
 
-const range = (from, to, skip = 1) => {
-  return [...Array(to || from).keys()]
-    .map(x => x * skip)
-    .map(x => x + (to ? from - 1 : 0))
-    .filter(x => x < (to ? to : Infinity))
-}
-
 const compare = (obj1, obj2) => {
   // objects are not the same type
   if (typeof (obj1) !== typeof (obj2)) return false
@@ -35,10 +28,6 @@ const program = (view, model = {}, $root = document.getElementById("app")) => {
       switch (node.type) {
         case "_TEXT":
           return document.createTextNode(node.prop.content)
-        case "_ROUTE":
-          node.childs = node.prop["fn"]()
-          node.type = "routed"
-          return create(node)
       }
 
     const $el = document.createElement(node.type)
@@ -97,6 +86,7 @@ const program = (view, model = {}, $root = document.getElementById("app")) => {
   }
 
   let app = new DeepProxy(_VIEW, model)
+  window.onhashchange = _ => app.currentRoute = new Date()
   app.initialized = true
 
   return app
