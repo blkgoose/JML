@@ -1,6 +1,13 @@
 'use strict'
 
-let views = []
+let oldView
+
+const range = (from, to, skip = 1) => {
+  return [...Array(to || from).keys()]
+    .map(x => x * skip)
+    .map(x => x + (to ? from - 1 : 0))
+    .filter(x => x < (to ? to : Infinity))
+}
 
 const compare = (obj1, obj2) => {
   // objects are not the same type
@@ -28,6 +35,10 @@ const program = (view, model = {}, $root = document.getElementById("app")) => {
       switch (node.type) {
         case "_TEXT":
           return document.createTextNode(node.prop.content)
+        case "_ROUTE":
+          node.childs = node.prop["fn"]()
+          node.type = "routed"
+          return create(node)
       }
 
     const $el = document.createElement(node.type)
@@ -76,11 +87,10 @@ const program = (view, model = {}, $root = document.getElementById("app")) => {
   }
 
   const _VIEW = model => {
-    let oldView = views[views.length - 1]
     let newView = view(model)
 
     update($root, newView, oldView)
-    views[views.length] = newView
+    oldView = newView
   }
 
   let app = new DeepProxy(_VIEW, model)
