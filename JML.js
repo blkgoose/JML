@@ -27,15 +27,29 @@ const router = routes => {
   let parsedRoute
   for (let route in routes)
     if (parsedRoute = parseRoute(window.location.hash.substr(1), route))
-      return routes[route](...Object.values(parsedRoute))
+      try {
+        return routes[route](...Object.values(parsedRoute))
+      } catch (error) {
+        if (error.name == "RouteNotValid")
+          continue
+        else
+          throw error
+      }
   return text()
 }
 
 const root = (c = []) => div({}, c)
 const text = (string = "") => el('_TEXT', { content: string }, [])
-const _if = (cond, trueFN, falseFN = text()) => cond ? trueFN : falseFN
 
 // functions
+const routeAssert = cond => {
+  const RouteNotValidError = (message = "") => {
+    return { name: "RouteNotValid", message: message }
+  }
+
+  if (!cond) throw RouteNotValidError("")
+}
+
 /**
  * re-routes to a new route
  *

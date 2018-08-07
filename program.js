@@ -80,6 +80,7 @@ const program = (view, model = {}, $root = document.getElementById("app")) => {
    * @param {node on old view} oldNode
    * @param {current deepness index} index
    */
+  // TODO: prop diffing
   const update = ($parent, newNode, oldNode, index = 0) => {
     if (!oldNode)
       $parent.appendChild(
