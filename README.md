@@ -14,7 +14,7 @@ pure javascript SPA library (not for production use)
   <div id="app"></div>
 </body>
 
-<script src="SPArtan.min.js"></script>
+<script src="Plume.min.js"></script>
 <script>
   let app = program(model =>
     root([text("Hello World!")])
@@ -36,7 +36,7 @@ pure javascript SPA library (not for production use)
   <div id="app"></div>
 </body>
 
-<script src="SPArtan.min.js"></script>
+<script src="Plume.min.js"></script>
 <script>
   let app = program(model =>
       root([
