@@ -1,4 +1,4 @@
-# SPArtan
+# Plume
 pure javascript SPA library (not for production use)
 
 #### Hello World example
