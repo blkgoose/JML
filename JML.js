@@ -19,7 +19,7 @@ const footer = (p, c) => el('footer', p, c)
 const article = (p, c) => el('article', p, c)
 const p = (p, c) => el('p', p, c)
 const b = (string) => el('b', p, [text(string)])
-const h = (string, size = 3, p) => el('h' + size, p, [text(string)])
+const h = (string, size = 3, p) => el('h' + clamp(size, 1, 6), p, [text(string)])
 const a = (link, name) => el('a', { href: link }, [text(name || link)])
 
 // special types
@@ -33,7 +33,7 @@ const router = routes => {
 
 const root = (c = []) => div({}, c)
 const text = (string = "") => el('_TEXT', { content: string }, [])
-const IF = (cond, trueFN, falseFN = text()) => cond ? trueFN : falseFN
+const _if = (cond, trueFN, falseFN = text()) => cond ? trueFN : falseFN
 
 // functions
 /**
@@ -59,6 +59,9 @@ const range = (from, to, skip = 1) =>
     .map(x => x * skip)
     .map(x => x + (to ? from : 0))
     .filter(x => x <= (to ? to : Infinity))
+
+const clamp = (num, min, max) =>
+  num > max ? max : num < min ? min : num
 
 /**
  * compares the hash with the route,
