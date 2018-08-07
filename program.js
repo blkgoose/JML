@@ -2,6 +2,12 @@
 
 let oldView
 
+/**
+ * deep compares two objects and returns wheter they differ or not
+ *
+ * @param {first object} obj1
+ * @param {object to compare with} obj2
+ */
 const compare = (obj1, obj2) => {
   // objects are not the same type
   if (typeof (obj1) !== typeof (obj2)) return false
@@ -21,7 +27,19 @@ const compare = (obj1, obj2) => {
   }
 }
 
+/**
+ * actual working part
+ *
+ * @param {view function} view
+ * @param {starting model} model
+ * @param {root to apply the program to} $root
+ */
 const program = (view, model = {}, $root = document.getElementById("app")) => {
+  /**
+   * converts an element to actual HTMLNode
+   *
+   * @param {node to create} node
+   */
   const create = (node) => {
     if (!node) return
     if (node.type.indexOf("_") == 0)
@@ -54,6 +72,14 @@ const program = (view, model = {}, $root = document.getElementById("app")) => {
     || !compare(node1.prop, node2.prop)
     || node1.childs.length != node2.childs.length
 
+  /**
+   * virtual dom diffing part
+   *
+   * @param {parent being checked} $parent
+   * @param {node on new view} newNode
+   * @param {node on old view} oldNode
+   * @param {current deepness index} index
+   */
   const update = ($parent, newNode, oldNode, index = 0) => {
     if (!oldNode)
       $parent.appendChild(
@@ -78,6 +104,11 @@ const program = (view, model = {}, $root = document.getElementById("app")) => {
         )
   }
 
+  /**
+   * converts the [[view]] function to a real working view
+   *
+   * @param {model to generate the view from} model
+   */
   const _VIEW = model => {
     let newView = view(model)
 

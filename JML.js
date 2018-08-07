@@ -1,3 +1,10 @@
+/**
+ * virual DOM element
+ *
+ * @param {type of the element (i.e. "div")} type
+ * @param {props} p
+ * @param {childs} c
+ */
 const el = (type, p = {}, c = []) => {
   return { type: type, prop: p, childs: c }
 }
@@ -29,19 +36,37 @@ const text = (string = "") => el('_TEXT', { content: string }, [])
 const IF = (cond, trueFN, falseFN = text()) => cond ? trueFN : falseFN
 
 // functions
+/**
+ * re-routes to a new route
+ *
+ * @param {route to go to} route
+ */
 const goto = (route) =>
   window.location =
   window.location.href.replace(window.location.hash, "").replace(RegExp("#$"), '')
   + "#/"
   + route.replace(RegExp("^/"), '')
 
-const range = (from, to, skip = 1) => {
-  return [...Array(to || from).keys()]
+/**
+ * generates an array containing numbers based on this algorithm
+ *
+ * @param {starting point} from
+ * @param {ending point} to
+ * @param {skip n each iteration} skip
+ */
+const range = (from, to, skip = 1) =>
+  [...Array(to || from).keys()]
     .map(x => x * skip)
     .map(x => x + (to ? from - 1 : 0))
     .filter(x => x < (to ? to : Infinity))
-}
 
+/**
+ * compares the hash with the route,
+ * returns an object containing variables found in route
+ *
+ * @param {hash to check (window.location.hash)} hash
+ * @param {route to be checked with} route
+ */
 const parseRoute = (hash, route) => {
   if (route.indexOf("?") == -1) {
     if (RegExp(route).test(hash))
