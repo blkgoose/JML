@@ -57,8 +57,8 @@ const goto = (route) =>
 const range = (from, to, skip = 1) =>
   [...Array(to || from).keys()]
     .map(x => x * skip)
-    .map(x => x + (to ? from - 1 : 0))
-    .filter(x => x < (to ? to : Infinity))
+    .map(x => x + (to ? from : 0))
+    .filter(x => x <= (to ? to : Infinity))
 
 /**
  * compares the hash with the route,
