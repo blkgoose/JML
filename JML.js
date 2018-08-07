@@ -26,7 +26,7 @@ const a = (link, name) => el('a', { href: link }, [text(name || link)])
 const router = routes => {
   let parsedRoute
   for (let route in routes)
-    if (parsedRoute = parseRoute(window.location.hash.substr(1), route == "*" ? ".*" : route))
+    if (parsedRoute = parseRoute(window.location.hash.substr(1), route))
       return routes[route](...Object.values(parsedRoute))
   return text()
 }
@@ -69,7 +69,7 @@ const range = (from, to, skip = 1) =>
  */
 const parseRoute = (hash, route) => {
   if (route.indexOf("?") == -1) {
-    if (RegExp(route).test(hash))
+    if (route == hash || route == "*")
       return {}
   }
   else {
