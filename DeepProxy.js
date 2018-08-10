@@ -1,19 +1,31 @@
 class DeepProxy {
-  constructor(f, initialModel = {}) {
+  constructor(f, initialModel = {}, UDhandler = undefined) {
+    this.proxify = (obj, handler) => {
+      for (let p in obj)
+        if (obj[p] instanceof Object)
+          obj[p] = new Proxy(this.proxify(obj[p]), handler)
+
+      return obj
+    }
+
     this.handler = {
       set: (target, key, value) => {
-        if (target && target[key] != value) {
+        if (!compare(target[key], value)) {
           target[key] =
-            value instanceof Object ?
-              new Proxy(value, this.handler) :
-              value
+            this.proxify(value, this.handler)
 
           f(this.model)
         }
         return true
       }
     }
-    this.model = new Proxy(initialModel, this.handler)
+
+    this.model =
+      new Proxy(
+        this.proxify(initialModel, this.handler),
+        UDhandler || this.handler
+      )
+
     return this.model
   }
 }
