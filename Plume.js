@@ -60,7 +60,6 @@ const Plume = (view, model = {}, $root = document.getElementById("app")) => {
         case "_TEXT":
           return document.createTextNode(node.prop.content)
       }
-
     const $el = document.createElement(node.type)
     createProps($el, node.prop)
 
@@ -74,7 +73,6 @@ const Plume = (view, model = {}, $root = document.getElementById("app")) => {
   }
 
   const setProp = ($el, name, value) => {
-    console.log($el, name, value)
     if (RegExp("^on").test(name))
       switch (name.toLowerCase()) {
         case "oncreate": value($el)
@@ -98,8 +96,7 @@ const Plume = (view, model = {}, $root = document.getElementById("app")) => {
     Object.keys(props).forEach(name =>
       setProp($el, name, props[name]))
 
-
-  const updateProps = node => {
+  const updateProps = ($el, newProps, oldProps = {}) => {
     const updateProp = ($$el, name, newProp, oldProp) => {
       if (!newProp)
         $$el.removeAttribute(name)
@@ -107,12 +104,13 @@ const Plume = (view, model = {}, $root = document.getElementById("app")) => {
         setProp($$el, name, newProp)
     }
 
-    Object.keys(node.props)
-
-    // Object.keys(Object.assign({}, newProps, oldProps))
-    //   .forEach(name =>
-    //     updateProp(node, name, newProps[name], oldProps[name])
-    //   )
+    if ($el instanceof Text)
+      $el.textContent = newProps.content
+    else
+      Object.keys(Object.assign({}, newProps, oldProps))
+        .forEach(name =>
+          updateProp($el, name, newProps[name], oldProps[name])
+        )
   }
 
   /**
