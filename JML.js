@@ -1,14 +1,3 @@
-/**
- * virual DOM element
- *
- * @param {type of the element (i.e. "div")} type
- * @param {props} p
- * @param {childs} c
- */
-const el = (type, p = {}, c = []) => {
-  return { type: type, prop: p, childs: c }
-}
-
 // basic HTML elements
 const div = (p, c) => el('div', p, c)
 const span = (p, c) => el('span', p, c)

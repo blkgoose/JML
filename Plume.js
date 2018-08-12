@@ -3,6 +3,17 @@
 let oldView
 
 /**
+ * virual DOM element
+ *
+ * @param {type of the element (i.e. "div")} type
+ * @param {props} p
+ * @param {childs} c
+ */
+const el = (type, p = {}, c = []) => {
+  return { type: type, prop: p, childs: c }
+}
+
+/**
  * deep compares two objects and returns wheter they differ or not
  *
  * @param {first object} obj1
@@ -44,7 +55,6 @@ const Plume = (view, model = {}, $root = document.getElementById("app")) => {
    * @param {node to create} node
    */
   const create = (node) => {
-    if (!node) return
     if (node.type.indexOf("_") == 0)
       switch (node.type) {
         case "_TEXT":
@@ -52,20 +62,7 @@ const Plume = (view, model = {}, $root = document.getElementById("app")) => {
       }
 
     const $el = document.createElement(node.type)
-    for (let name in node.prop) {
-      if (RegExp("^on").test(name))
-        switch (name.toLowerCase()) {
-          case "oncreate": node.prop[name]($el)
-            break
-          default:
-            $el.addEventListener(
-              name.replace(RegExp("^on"), "").toLowerCase(),
-              e => node.prop[name]($el, e)
-            )
-        }
-      else if (!name.startsWith("_"))
-        $el.setAttribute(name, node.prop[name])
-    }
+    createProps($el, node.prop)
 
     if (!(node.childs instanceof Array))
       throw Error("node childs should be in array...")
@@ -76,6 +73,48 @@ const Plume = (view, model = {}, $root = document.getElementById("app")) => {
     return $el
   }
 
+  const setProp = ($el, name, value) => {
+    console.log($el, name, value)
+    if (RegExp("^on").test(name))
+      switch (name.toLowerCase()) {
+        case "oncreate": value($el)
+          break
+        default:
+          $el.addEventListener(
+            name.slice(2).toLowerCase(),
+            e => value($el, e)
+          )
+      }
+    else if (!name.startsWith("_"))
+      if (typeof value === "boolean")
+        value ?
+          $el.setAttribute(name, value) :
+          null
+      else
+        $el.setAttribute(name, value)
+  }
+
+  const createProps = ($el, props) =>
+    Object.keys(props).forEach(name =>
+      setProp($el, name, props[name]))
+
+
+  const updateProps = node => {
+    const updateProp = ($$el, name, newProp, oldProp) => {
+      if (!newProp)
+        $$el.removeAttribute(name)
+      else if (!oldProp || newProp !== oldProp)
+        setProp($$el, name, newProp)
+    }
+
+    Object.keys(node.props)
+
+    // Object.keys(Object.assign({}, newProps, oldProps))
+    //   .forEach(name =>
+    //     updateProp(node, name, newProps[name], oldProps[name])
+    //   )
+  }
+
   /**
    * virtual dom diffing part
    *
@@ -84,7 +123,6 @@ const Plume = (view, model = {}, $root = document.getElementById("app")) => {
    * @param {node on old view} oldNode
    * @param {current deepness index} index
    */
-  // TODO: prop diffing
   const update = ($parent, newNode, oldNode, index = 0) => {
     if (!oldNode)
       $parent.appendChild(
@@ -96,14 +134,18 @@ const Plume = (view, model = {}, $root = document.getElementById("app")) => {
       )
     else if (
       newNode.type !== oldNode.type
-      || !compare(newNode.prop, oldNode.prop)
       || newNode.childs.length !== oldNode.childs.length
     )
       $parent.replaceChild(
         create(newNode),
         $parent.childNodes[index]
       )
-    else if (newNode.type)
+    else if (newNode.type) {
+      updateProps(
+        $parent.childNodes[index],
+        newNode.prop,
+        oldNode.prop
+      )
       for (let i = 0; i < newNode.childs.length || i < oldNode.childs.length; i++)
         update(
           $parent.childNodes[index],
@@ -111,6 +153,7 @@ const Plume = (view, model = {}, $root = document.getElementById("app")) => {
           oldNode.childs[i],
           i
         )
+    }
   }
 
   /**
