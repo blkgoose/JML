@@ -16,7 +16,7 @@ pure javascript SPA library (not for production use)
 
 <script src="Plume.min.js"></script>
 <script>
-  let app = program(model =>
+  let app = Plume(model =>
     root([text("Hello World!")])
   )
 </script>
@@ -38,7 +38,7 @@ pure javascript SPA library (not for production use)
 
 <script src="Plume.min.js"></script>
 <script>
-  let app = program(model =>
+  let app = Plume(model =>
       root([
         router(model, {
           "/fixed/1": _ =>
