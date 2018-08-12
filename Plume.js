@@ -54,14 +54,17 @@ const Plume = (view, model = {}, $root = document.getElementById("app")) => {
     const $el = document.createElement(node.type)
     for (let name in node.prop) {
       if (RegExp("^on").test(name))
-        if (name.toLowerCase() == "oncreate")
-          node.prop[name]($el)
-        else
-          $el.addEventListener(
-            name.replace(RegExp("^on"), "").toLowerCase(),
-            e => node.prop[name]($el, e)
-          )
-      else $el.setAttribute(name, node.prop[name])
+        switch (name.toLowerCase()) {
+          case "oncreate": node.prop[name]($el)
+            break
+          default:
+            $el.addEventListener(
+              name.replace(RegExp("^on"), "").toLowerCase(),
+              e => node.prop[name]($el, e)
+            )
+        }
+      else if (!name.startsWith("_"))
+        $el.setAttribute(name, node.prop[name])
     }
 
     if (!(node.childs instanceof Array))
@@ -122,8 +125,10 @@ const Plume = (view, model = {}, $root = document.getElementById("app")) => {
     oldView = newView
   }
 
+  model._routerData = { hash: undefined, data: undefined }
   let app = new DeepProxy(_VIEW, model)
-  window.onhashchange = _ => app.currentRoute = new Date().getTime()
+  window.onhashchange = _ =>
+    app._currentRouteTime = new Date().getTime()
   app.initialized = true
 
   return app
