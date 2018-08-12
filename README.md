@@ -40,12 +40,12 @@ pure javascript SPA library (not for production use)
 <script>
   let app = program(model =>
       root([
-        router({
+        router(model, {
           "/fixed/1": _ =>
             root([text("fixed route #1")]),
 
-          "/dynamic/?num": num =>
-            root([text(`dynamic route [${num}]`)]),
+          "/dynamic/?num": data =>
+            root([text(`dynamic route [${data.num}]`)]),
 
           "*": _ =>
             root([h("404 PAGE NOT FOUND", 1)]),
