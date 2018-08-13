@@ -146,8 +146,6 @@ const Plume = (view, model = {}, $root) => {
    * @param {current deepness index} index
    */
   const update = ($parent, newNode, oldNode, index = 0) => {
-    console.log("update", $parent, newNode, oldNode, index)
-
     if (!oldNode)
       $parent.appendChild(
         create(newNode)
@@ -170,15 +168,15 @@ const Plume = (view, model = {}, $root) => {
         newNode.prop,
         oldNode.prop
       )
-      for (let i = 0; i < Math.max(newNode.childs.length, oldNode.childs.length); i++) {
-        console.log($parent.childNodes[index])
-        update(
-          $parent.childNodes[index],
-          newNode.childs[i],
-          oldNode.childs[i],
-          i
+      range(Math.max(newNode.childs.length, oldNode.childs.length))
+        .forEach(i =>
+          update(
+            $parent.childNodes[index],
+            newNode.childs[i],
+            oldNode.childs[i],
+            i
+          )
         )
-      }
     }
   }
 
@@ -190,20 +188,15 @@ const Plume = (view, model = {}, $root) => {
   const _VIEW = model => {
     let newView = view(model)
 
-    console.log("_VIEW", $root, newView, oldView)
-
     update($root, newView, oldView)
     oldView = newView
   }
 
+  // if root is not defined, initialize base Plume stuff.
   if (!$root) {
     document.body = document.createElement("body")
     document.body.innerHTML = ""
-    let _root =
-      document.body
-        .appendChild(
-          create(div({ id: "_Plume" })))
-    return Plume(view, model, _root)
+    return Plume(view, model, document.body)
   }
 
   model._routerData = { hash: undefined, data: undefined }

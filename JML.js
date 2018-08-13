@@ -44,27 +44,29 @@ const router = (model, routes) => {
 const root = (c) => div({}, c)
 const text = (string = "") => el('_TEXT', { content: string }, [])
 const init = (initFunction, c) => {
+  const hashCode = str => {
+    let hash = 0, i, chr
+    if (str.length === 0) return hash
+    for (i = 0; i < str.length; i++) {
+      chr = str.charCodeAt(i)
+      hash = ((hash << 5) - hash) + chr
+      hash |= 0
+    }
+    return hash
+  }
+
   let props = { oncreate: e => initFunction(e) }
   let childs = c
   let hash =
-    JSON.stringify(props).hashCode() +
-    JSON.stringify(childs).hashCode()
+    hashCode(
+      JSON.stringify(props) +
+      JSON.stringify(childs)
+    )
 
   return el(`_${hash}`, props, childs)
 }
 
 // functions
-String.prototype.hashCode = () => {
-  let hash = 0, i, chr
-  if (this.length === 0) return hash
-  for (i = 0; i < this.length; i++) {
-    chr = this.charCodeAt(i)
-    hash = ((hash << 5) - hash) + chr
-    hash |= 0
-  }
-  return hash
-}
-
 const routeAssert = cond => {
   const RouteNotValidError = (message = "") => {
     return { name: "RouteNotValid", message: message }

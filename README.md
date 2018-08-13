@@ -20,7 +20,7 @@ pure javascript SPA library (not for production use)
 
 <script src="Plume.min.js"></script>
 <script>
-  let app = Plume(model =>
+  Plume(model =>
       root([
         router(model, {
           "/fixed/1": _ =>
