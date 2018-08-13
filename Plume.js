@@ -48,7 +48,7 @@ const compare = (obj1, obj2) => {
  * @param {starting model} model
  * @param {root to apply the program to} $root
  */
-const Plume = (view, model = {}, $root = document.getElementById("app")) => {
+const Plume = (view, model = {}, $root) => {
   /**
    * converts an element to actual HTMLNode
    *
@@ -72,10 +72,18 @@ const Plume = (view, model = {}, $root = document.getElementById("app")) => {
     return $el
   }
 
-  const setProp = ($el, name, value) => {
+  /**
+   * set or updates the element props
+   *
+   * @param {element to set the prop for} $el
+   * @param {name of the prop} name
+   * @param {value of the prop} value
+   * @param {defines if is update or creation time} isBeingCreated
+   */
+  const setProp = ($el, name, value, isBeingCreated = false) => {
     if (RegExp("^on").test(name))
       switch (name.toLowerCase()) {
-        case "oncreate": value($el)
+        case "oncreate": console.log(isBeingCreated)//if (isBeingCreated) value($el)
           break
         default:
           $el.addEventListener(
@@ -92,10 +100,24 @@ const Plume = (view, model = {}, $root = document.getElementById("app")) => {
         $el.setAttribute(name, value)
   }
 
+  /**
+   * creates the props for the given element.
+   *
+   * @param {element to crete props for} $el
+   * @param {props object with name and value} props
+   */
   const createProps = ($el, props) =>
     Object.keys(props).forEach(name =>
-      setProp($el, name, props[name]))
+      setProp($el, name, props[name], true))
 
+  /**
+   * updates the props for the given item,
+   * actual prop diffing part.
+   *
+   * @param {element to update} $el
+   * @param {set of new props} newProps
+   * @param {set of old props} oldProps
+   */
   const updateProps = ($el, newProps, oldProps = {}) => {
     const updateProp = ($$el, name, newProp, oldProp) => {
       if (!newProp)
@@ -105,7 +127,9 @@ const Plume = (view, model = {}, $root = document.getElementById("app")) => {
     }
 
     if ($el instanceof Text)
-      $el.textContent = newProps.content
+      newProps.content !== oldProps.content ?
+        $el.textContent = newProps.content :
+        null
     else
       Object.keys(Object.assign({}, newProps, oldProps))
         .forEach(name =>
@@ -122,6 +146,8 @@ const Plume = (view, model = {}, $root = document.getElementById("app")) => {
    * @param {current deepness index} index
    */
   const update = ($parent, newNode, oldNode, index = 0) => {
+    console.log("update", $parent, newNode, oldNode, index)
+
     if (!oldNode)
       $parent.appendChild(
         create(newNode)
@@ -144,13 +170,15 @@ const Plume = (view, model = {}, $root = document.getElementById("app")) => {
         newNode.prop,
         oldNode.prop
       )
-      for (let i = 0; i < newNode.childs.length || i < oldNode.childs.length; i++)
+      for (let i = 0; i < Math.max(newNode.childs.length, oldNode.childs.length); i++) {
+        console.log($parent.childNodes[index])
         update(
           $parent.childNodes[index],
           newNode.childs[i],
           oldNode.childs[i],
           i
         )
+      }
     }
   }
 
@@ -162,8 +190,20 @@ const Plume = (view, model = {}, $root = document.getElementById("app")) => {
   const _VIEW = model => {
     let newView = view(model)
 
+    console.log("_VIEW", $root, newView, oldView)
+
     update($root, newView, oldView)
     oldView = newView
+  }
+
+  if (!$root) {
+    document.body = document.createElement("body")
+    document.body.innerHTML = ""
+    let _root =
+      document.body
+        .appendChild(
+          create(div({ id: "_Plume" })))
+    return Plume(view, model, _root)
   }
 
   model._routerData = { hash: undefined, data: undefined }

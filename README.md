@@ -6,35 +6,17 @@ pure javascript SPA library (not for production use)
 ```html
 <!DOCTYPE html>
 
-<head>
-  <title>Hello World</title>
-</head>
-
-<body>
-  <div id="app"></div>
-</body>
-
 <script src="Plume.min.js"></script>
 <script>
   let app = Plume(model =>
     root([text("Hello World!")])
   )
 </script>
-
-</html>
 ```
 
 #### Routing example
 ```html
 <!DOCTYPE html>
-
-<head>
-  <title>Hello World</title>
-</head>
-
-<body>
-  <div id="app"></div>
-</body>
 
 <script src="Plume.min.js"></script>
 <script>
@@ -53,6 +35,4 @@ pure javascript SPA library (not for production use)
       ])
     )
 </script>
-
-</html>
 ```
