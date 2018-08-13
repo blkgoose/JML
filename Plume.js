@@ -194,9 +194,9 @@ const Plume = (view, model = {}, $root) => {
 
   // if root is not defined, initialize base Plume stuff.
   if (!$root) {
-    document.body = document.createElement("body")
-    document.body.innerHTML = ""
-    return Plume(view, model, document.body)
+    let p
+    window.onload = _ => p = Plume(view, model, document.body)
+    return p
   }
 
   model._routerData = { hash: undefined, data: undefined }
