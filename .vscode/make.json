@@ -1,0 +1,7 @@
+{
+    "name": "Plume",
+    "src": "./JML.js",
+    "output": "./Plume.min.js",
+    "includeReference": true,
+    "closure": {}
+}

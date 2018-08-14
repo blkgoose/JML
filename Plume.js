@@ -1,5 +1,3 @@
-'use strict'
-
 let oldView
 
 /**
@@ -92,11 +90,9 @@ const Plume = (view, model = {}, $root) => {
           )
       }
     else if (!name.startsWith("_"))
-      if (typeof value === "boolean")
-        value ?
-          $el.setAttribute(name, value) :
-          null
-      else
+      if (typeof value === "boolean") {
+        if (value) $el.setAttribute(name, value)
+      } else
         $el.setAttribute(name, value)
   }
 
@@ -126,11 +122,10 @@ const Plume = (view, model = {}, $root) => {
         setProp($$el, name, newProp)
     }
 
-    if ($el instanceof Text)
-      newProps.content !== oldProps.content ?
-        $el.textContent = newProps.content :
-        null
-    else
+    if ($el instanceof Text) {
+      if (newProps.content !== oldProps.content)
+        $el.textContent = newProps.content
+    } else
       Object.keys(Object.assign({}, newProps, oldProps))
         .forEach(name =>
           updateProp($el, name, newProps[name], oldProps[name])
@@ -201,7 +196,7 @@ const Plume = (view, model = {}, $root) => {
   model._routerData = { hash: undefined, data: undefined }
   let app = new DeepProxy(_VIEW, model)
   window.onhashchange = _ =>
-    app._currentRouteTime = new Date().getTime()
+    app._currentRouteTime = window.location.hash
   app.initialized = true
 
   return app
