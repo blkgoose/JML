@@ -83,7 +83,7 @@ const Plume = (view, model = {}, $root) => {
   const setProp = ($el, name, value, isBeingCreated = false) => {
     if (RegExp("^on").test(name))
       switch (name.toLowerCase()) {
-        case "oncreate": console.log(isBeingCreated)//if (isBeingCreated) value($el)
+        case "oncreate": if (isBeingCreated) value($el)
           break
         default:
           $el.addEventListener(
@@ -193,11 +193,10 @@ const Plume = (view, model = {}, $root) => {
   }
 
   // if root is not defined, initialize base Plume stuff.
-  if (!$root) {
-    let p
-    window.onload = _ => p = Plume(view, model, document.body)
-    return p
-  }
+  if (!$root)
+    return new Promise(r => {
+      window.onload = () => r(Plume(view, model, document.body))
+    })
 
   model._routerData = { hash: undefined, data: undefined }
   let app = new DeepProxy(_VIEW, model)
