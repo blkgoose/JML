@@ -36,3 +36,7 @@ pure javascript SPA library (not for production use)
     )
 </script>
 ```
+
+The Plume function returns the model object of the app,
+if the binding element isn't set (third parameter),
+the function returns a Promise of the model.
