@@ -15,31 +15,31 @@ const a = (link, name) => el('a', { href: link }, [text(name || link)])
 
 
 // special types
-const router = (model, routes) => {
-  let parsedRoute
-  let hash = window.location.hash.substr(1)
-  for (let route in routes)
-    if (parsedRoute = parseRoute(hash, route))
-      try {
-        return routes[route](
-          new DeepProxy(d => model._routerData =
-            {
-              hash: window.location.hash,
-              data: d,
-              lastUpdate: new Date().getTime()
-            },
-            model._routerData.hash !== window.location.hash ?
-              parsedRoute :
-              model._routerData.data)
-        )
-      } catch (error) {
-        if (error.name == "RouteNotValid")
-          continue
-        else
-          throw error
-      }
-  return text()
-}
+// const router = (model, routes) => {
+//   let parsedRoute
+//   let hash = window.location.hash.substr(1)
+//   for (let route in routes)
+//     if (parsedRoute = parseRoute(hash, route))
+//       try {
+//         return routes[route](
+//           new DeepProxy(d => model._routerData =
+//             {
+//               hash: window.location.hash,
+//               data: d,
+//               lastUpdate: new Date().getTime()
+//             },
+//             model._routerData.hash !== window.location.hash ?
+//               parsedRoute :
+//               model._routerData.data)
+//         )
+//       } catch (error) {
+//         if (error.name == "RouteNotValid")
+//           continue
+//         else
+//           throw error
+//       }
+//   return text()
+// }
 
 const root = (c) => div({}, c)
 const text = (string = "") => el('_TEXT', { content: string }, [])

@@ -79,20 +79,22 @@ const Plume = (view, model = {}, $root) => {
    * @param {defines if is update or creation time} isBeingCreated
    */
   const setProp = ($el, name, value, isBeingCreated = false) => {
+    name = name.toLowerCase()
     if (RegExp("^on").test(name))
-      switch (name.toLowerCase()) {
+      switch (name) {
         case "oncreate": if (isBeingCreated) value($el)
           break
         default:
           $el.addEventListener(
-            name.slice(2).toLowerCase(),
+            name.slice(2),
             e => value($el, e)
           )
       }
-    else if (!name.startsWith("_"))
+    else
       if (typeof value === "boolean") {
         if (value) $el.setAttribute(name, value)
-      } else
+      }
+      else
         $el.setAttribute(name, value)
   }
 
@@ -193,11 +195,18 @@ const Plume = (view, model = {}, $root) => {
       window.onload = () => r(Plume(view, model, document.body))
     })
 
-  model._routerData = { hash: undefined, data: undefined }
+  // model.__PLUME__ = {
+  //   routerData: {
+  //     hash: undefined,
+  //     data: undefined
+  //   }
+  // }
+  model.__PLUME__ = {}
+
   let app = new DeepProxy(_VIEW, model)
   window.onhashchange = _ =>
-    app._currentRouteTime = window.location.hash
-  app.initialized = true
+    app.__PLUME__ = { routerData: { currentRouteTime: new Date().getTime() } }
+  app.__PLUME__.initialized = true
 
   return app
 }
