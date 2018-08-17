@@ -3,7 +3,7 @@ class DeepProxy {
     this.proxify = (obj, handler) => {
       for (let p in obj)
         if (obj[p] instanceof Object)
-          obj[p] = new Proxy(this.proxify(obj[p]), handler)
+          obj[p] = new Proxy(this.proxify(obj[p], handler), handler)
 
       return obj
     }
