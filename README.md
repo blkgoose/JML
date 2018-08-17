@@ -6,7 +6,7 @@ pure javascript SPA library (not for production use)
 ```html
 <!DOCTYPE html>
 
-<script src="Plume.min.js"></script>
+<script src="https://cdn.rawgit.com/blkgoose/Plume/master/Plume.min.js"></script>
 <script>
   Plume(model =>
     root([text("Hello World!")])
@@ -18,7 +18,7 @@ pure javascript SPA library (not for production use)
 ```html
 <!DOCTYPE html>
 
-<script src="Plume.min.js"></script>
+<script src="https://cdn.rawgit.com/blkgoose/Plume/master/Plume.min.js"></script>
 <script>
   Plume(model =>
       root([
