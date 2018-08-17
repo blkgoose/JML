@@ -21,17 +21,7 @@ const router = (model, routes) => {
   for (let route in routes)
     if (parsedRoute = parseRoute(hash, route))
       try {
-        return routes[route](
-          new DeepProxy(d => model._routerData =
-            {
-              hash: window.location.hash,
-              data: d,
-              lastUpdate: new Date().getTime()
-            },
-            model._routerData.hash !== window.location.hash ?
-              parsedRoute :
-              model._routerData.data)
-        )
+        return routes[route](...Object.values(parsedRoute))
       } catch (error) {
         if (error.name == "RouteNotValid")
           continue
