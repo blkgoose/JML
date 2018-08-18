@@ -6,11 +6,14 @@ class DeepProxy {
           target[key] =
             this.proxify(value, this.handler)
 
-          f(this.model)
+          if (this.doCallback)
+            f(this)
         }
         return true
       }
     }
+
+    this.doCallback = true
 
     this.proxify = (obj, handler) => {
       for (let p in obj)
@@ -22,7 +25,7 @@ class DeepProxy {
 
     let handler = UDhandler || this.handler
 
-    this.model =
+    this.data =
       new Proxy(
         this.proxify(
           initialModel,
@@ -30,7 +33,5 @@ class DeepProxy {
         ),
         handler
       )
-
-    return this.model
   }
 }

@@ -79,7 +79,12 @@ const Plume = (view, model = {}, $root) => {
    * @param {defines if is update or creation time} isBeingCreated
    */
   const setProp = ($el, name, value, isBeingCreated = false) => {
+    const setAttr = ($$el, n, v) => {
+      $$el.setAttribute(n, v)
+      $$el[n] = v
+    }
     name = name.toLowerCase()
+
     if (RegExp("^on").test(name))
       switch (name) {
         case "oncreate": if (isBeingCreated) value($el)
@@ -92,10 +97,10 @@ const Plume = (view, model = {}, $root) => {
       }
     else
       if (typeof value === "boolean") {
-        if (value) $el.setAttribute(name, value)
+        if (value) setAttr($el, name, value)
       }
       else
-        $el.setAttribute(name, value)
+        setAttr($el, name, value)
   }
 
   /**
@@ -120,8 +125,10 @@ const Plume = (view, model = {}, $root) => {
     const updateProp = ($$el, name, newProp, oldProp) => {
       if (!newProp)
         $$el.removeAttribute(name)
-      else if (!oldProp || newProp !== oldProp)
+      else if (!(newProp instanceof Function) &&
+        (!oldProp || newProp !== oldProp)) {
         setProp($$el, name, newProp)
+      }
     }
 
     if ($el instanceof Text) {
@@ -183,7 +190,9 @@ const Plume = (view, model = {}, $root) => {
    * @param {model to generate the view from} model
    */
   const _VIEW = model => {
-    let newView = view(model)
+    model.doCallback = false
+    let newView = view(model.data)
+    model.doCallback = true
 
     update($root, newView, oldView)
     oldView = newView
@@ -204,8 +213,9 @@ const Plume = (view, model = {}, $root) => {
 
   let app = new DeepProxy(_VIEW, model)
   onhashchange = _ =>
-    app.__PLUME__.routerData.hash = location.hash
-  app.__PLUME__.initialized = true
+    app.data.__PLUME__.routerData.hash = location.hash
 
-  return app
+  app.data.__PLUME__.initialized = true
+
+  return app.data
 }
