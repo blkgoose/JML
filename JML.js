@@ -15,7 +15,7 @@ const a = (link, name) => el('a', { href: link }, [text(name || link)])
 
 
 // special types
-const router = (model, routes) => {
+const router = routes => {
   let parsedRoute
   let hash = location.hash.substr(1)
   for (let route in routes)
