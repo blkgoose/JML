@@ -20,13 +20,15 @@ class DeepProxy {
       return obj
     }
 
+    let handler = UDhandler || this.handler
+
     this.model =
       new Proxy(
         this.proxify(
           initialModel,
-          UDhandler || this.handler
+          handler
         ),
-        UDhandler || this.handler
+        handler
       )
 
     return this.model

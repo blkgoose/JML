@@ -191,21 +191,20 @@ const Plume = (view, model = {}, $root) => {
 
   // if root is not defined, initialize base Plume stuff.
   if (!$root)
-    return new Promise(r => {
-      window.onload = () => r(Plume(view, model, document.body))
+    return new Promise(res => {
+      onload = () => res(Plume(view, model, document.body))
     })
 
-  // model.__PLUME__ = {
-  //   routerData: {
-  //     hash: undefined,
-  //     data: undefined
-  //   }
-  // }
-  model.__PLUME__ = {}
+  model.__PLUME__ = {
+    routerData: {
+      hash: location.hash,
+      data: {}
+    }
+  }
 
   let app = new DeepProxy(_VIEW, model)
-  window.onhashchange = _ =>
-    app.__PLUME__ = { routerData: { currentRouteTime: new Date().getTime() } }
+  onhashchange = _ =>
+    app.__PLUME__.routerData.hash = location.hash
   app.__PLUME__.initialized = true
 
   return app

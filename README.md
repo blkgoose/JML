@@ -1,5 +1,5 @@
 # Plume
-pure javascript SPA library (not for production use)
+Lightweight SPA library
 
 #### Hello World example
 

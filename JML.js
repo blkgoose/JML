@@ -17,7 +17,7 @@ const a = (link, name) => el('a', { href: link }, [text(name || link)])
 // special types
 const router = (model, routes) => {
   let parsedRoute
-  let hash = window.location.hash.substr(1)
+  let hash = location.hash.substr(1)
   for (let route in routes)
     if (parsedRoute = parseRoute(hash, route))
       try {
@@ -50,7 +50,7 @@ const routeAssert = cond => {
  */
 const goto = (route) =>
   window.location =
-  window.location.href.replace(window.location.hash, "").replace(RegExp("#$"), '')
+  location.href.replace(location.hash, "").replace(RegExp("#$"), '')
   + "#/"
   + route.replace(RegExp("^/"), '')
 
@@ -81,7 +81,7 @@ const clamp = (num, min, max) =>
  * compares the hash with the route,
  * returns an object containing variables found in route
  *
- * @param {hash to check (window.location.hash)} hash
+ * @param {hash to check (location.hash)} hash
  * @param {route to be checked with} route
  */
 const parseRoute = (hash, route) => {
