@@ -23,13 +23,15 @@ const router = (model, routes) => {
   for (let route in routes)
     if (parsedRoute = parseRoute(hash, route))
       try {
-        if (model.__PLUME__.routerData.hash != hash)
+        if (model.__PLUME__.routerData.hash != hash) {
+          console.log("data bind")
           model.__PLUME__.routerData = {
             data: parsedRoute,
             hash: hash
           }
+        }
         setTimeout(() => {
-          try { document.querySelector("*[autofocus]").focus() } catch (_) { }
+          try { document.querySelector("[autofocus]").focus() } catch (_) { }
         })
         return routes[route](model.__PLUME__.routerData.data)
       } catch (error) {
@@ -45,12 +47,19 @@ const root = (c) => div({}, c)
 const text = (string = "") => el('_TEXT', { content: string }, [])
 
 // functions
-const routeAssert = cond => {
-  const RouteNotValidError = (message = "") => {
-    return { name: "RouteNotValid", message: message }
+
+/**
+ * use this to skip the route if data is not correct
+ * 
+ * @param {assert} condition 
+ * @param {optional message to show} message 
+ */
+const rAssert = (condition, message = "") => {
+  const RouteNotValidError = m => {
+    return { name: "RouteNotValid", message: m }
   }
 
-  if (!cond) throw RouteNotValidError()
+  if (!condition) throw RouteNotValidError(message)
 }
 
 /**
