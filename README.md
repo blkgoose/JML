@@ -6,7 +6,7 @@ Lightweight SPA library
 ```html
 <!DOCTYPE html>
 
-<script src="https://cdn.rawgit.com/blkgoose/Plume/master/Plume.min.js"></script>
+<script src="https://bit.ly/2vXtKnZ"></script>
 <script>
   Plume(model =>
     root([text("Hello World!")])
@@ -18,7 +18,7 @@ Lightweight SPA library
 ```html
 <!DOCTYPE html>
 
-<script src="https://cdn.rawgit.com/blkgoose/Plume/master/Plume.min.js"></script>
+<script src="https://bit.ly/2vXtKnZ"></script>
 <script>
   Plume(model =>
     router(model, {
