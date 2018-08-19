@@ -21,7 +21,6 @@ Lightweight SPA library
 <script src="https://cdn.rawgit.com/blkgoose/Plume/master/Plume.min.js"></script>
 <script>
   Plume(model =>
-      root([
         router(model, {
           "/fixed/1": _ =>
             root([text("fixed route #1")]),
@@ -32,7 +31,6 @@ Lightweight SPA library
           "*": _ =>
             root([h("404 PAGE NOT FOUND", 1)]),
         })
-      ])
     )
 </script>
 ```
