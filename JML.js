@@ -24,14 +24,11 @@ const router = (model, routes) => {
   for (let route in routes)
     if (parsedRoute = parseRoute(hash, route))
       try {
-        if (model.__PLUME__.routerData.hash != hash) {
-          console.log("data bind", model.__PLUME__.routerData)
+        if (model.__PLUME__.routerData.hash != hash)
           model.__PLUME__.routerData = {
             data: parsedRoute,
             hash: hash
           }
-          console.log("=", model.__PLUME__.routerData)
-        }
         setTimeout(() => {
           try {
             window.scrollTo(0, 0)
