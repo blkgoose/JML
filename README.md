@@ -1,14 +1,14 @@
 # Plume
 Lightweight SPA library
 
-CDN: https://bit.ly/2vXtKnZ
+CDN: https://cdn.rawgit.com/blkgoose/Plume/master/Plume.min.js
 
 #### Hello World example
 
 ```html
 <!DOCTYPE html>
 
-<script src="https://bit.ly/2vXtKnZ"></script>
+<script src="https://cdn.rawgit.com/blkgoose/Plume/master/Plume.min.js"></script>
 <script>
   Plume(model =>
     root([text("Hello World!")])
@@ -20,7 +20,7 @@ CDN: https://bit.ly/2vXtKnZ
 ```html
 <!DOCTYPE html>
 
-<script src="https://bit.ly/2vXtKnZ"></script>
+<script src="https://cdn.rawgit.com/blkgoose/Plume/master/Plume.min.js"></script>
 <script>
   Plume(model =>
     router(model, {
