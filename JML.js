@@ -10,9 +10,14 @@ const footer = (p, c) => el('footer', p, c)
 const article = (p, c) => el('article', p, c)
 const input = (p) => el('input', p, [])
 const textarea = (p) => el('textarea', p, [])
+const table = (p, c) => el('table', p, c)
+const tr = (p, c) => el('tr', p, c)
+const td = (p, c) => el('td', p, c)
+const th = (p, c) => el('th', p, c)
 const p = (p, c) => el('p', p, c)
+
 const b = (string) => el('b', p, [text(string)])
-const h = (string, size = 3, p) => el('h' + clamp(size, 1, 6), p, [text(string)])
+const h = (string, size = 3, p) => el(`h${clamp(size, 1, 6)}`, p, [text(string)])
 const a = (link, name) => el('a', { href: link }, [text(name || link)])
 
 
