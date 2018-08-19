@@ -166,7 +166,8 @@ const Plume = (view, model = {}, $root) => {
         create(newNode),
         $parent.childNodes[index]
       )
-    else if (newNode.type) {
+    else if (newNode.type && $parent instanceof HTMLElement) {
+
       updateProps(
         $parent.childNodes[index],
         newNode.prop,
