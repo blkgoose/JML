@@ -1,6 +1,8 @@
 # Plume
 Lightweight SPA library
 
+CDN: https://bit.ly/2vXtKnZ
+
 #### Hello World example
 
 ```html
