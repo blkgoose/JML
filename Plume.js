@@ -125,8 +125,7 @@ const Plume = (view, model = {}, $root) => {
     const updateProp = ($$el, name, newProp, oldProp) => {
       if (!newProp)
         $$el.removeAttribute(name)
-      else if (!(newProp instanceof Function) &&
-        (!oldProp || newProp !== oldProp)) {
+      else if (!oldProp || newProp !== oldProp) {
         setProp($$el, name, newProp)
       }
     }

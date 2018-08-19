@@ -18,20 +18,25 @@ const a = (link, name) => el('a', { href: link }, [text(name || link)])
 
 // special types
 const router = (model, routes) => {
+  // TODO2: update performance
   let parsedRoute
   let hash = location.hash.substr(1)
   for (let route in routes)
     if (parsedRoute = parseRoute(hash, route))
       try {
         if (model.__PLUME__.routerData.hash != hash) {
-          console.log("data bind")
+          console.log("data bind", model.__PLUME__.routerData)
           model.__PLUME__.routerData = {
             data: parsedRoute,
             hash: hash
           }
+          console.log("=", model.__PLUME__.routerData)
         }
         setTimeout(() => {
-          try { document.querySelector("[autofocus]").focus() } catch (_) { }
+          try {
+            window.scrollTo(0, 0)
+            document.querySelector("[autofocus]").focus()
+          } catch (_) { }
         })
         return routes[route](model.__PLUME__.routerData.data)
       } catch (error) {
@@ -42,7 +47,6 @@ const router = (model, routes) => {
       }
   return text()
 }
-
 const root = (c) => div({}, c)
 const text = (string = "") => el('_TEXT', { content: string }, [])
 
