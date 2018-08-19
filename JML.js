@@ -2,7 +2,7 @@
 const div = (p, c) => el('div', p, c)
 const span = (p, c) => el('span', p, c)
 const br = (p = {}) => el('br', p)
-const hr = (p = {}) => el('tr', p)
+const hr = (p = {}) => el('hr', p)
 const button = (p, c) => el('button', p, c)
 const header = (p, c) => el('header', p, c)
 const navbar = (p, c) => el('nav', p, c)
