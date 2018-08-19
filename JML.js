@@ -28,6 +28,9 @@ const router = (model, routes) => {
             data: parsedRoute,
             hash: hash
           }
+        setTimeout(() => {
+          try { document.querySelector("*[autofocus]").focus() } catch (_) { }
+        })
         return routes[route](model.__PLUME__.routerData.data)
       } catch (error) {
         if (error.name == "RouteNotValid")
