@@ -21,16 +21,16 @@ Lightweight SPA library
 <script src="https://cdn.rawgit.com/blkgoose/Plume/master/Plume.min.js"></script>
 <script>
   Plume(model =>
-        router(model, {
-          "/fixed/1": _ =>
-            root([text("fixed route #1")]),
+    router(model, {
+      "/fixed/1": _ =>
+        root([text("fixed route #1")]),
 
-          "/dynamic/:num": data =>
-            root([text(`dynamic route [${data.num}]`)]),
+      "/dynamic/:num": data =>
+        root([text(`dynamic route [${data.num}]`)]),
 
-          "*": _ =>
-            root([h("404 PAGE NOT FOUND", 1)]),
-        })
+      "*": _ =>
+        root([h("404 PAGE NOT FOUND", 1)]),
+    })
     )
 </script>
 ```
