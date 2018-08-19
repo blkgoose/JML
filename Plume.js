@@ -213,7 +213,7 @@ const Plume = (view, model = {}, $root) => {
 
   let app = new DeepProxy(_VIEW, model)
   onhashchange = _ =>
-    app.data.__PLUME__.routerData.hash = location.hash
+    app.data.__PLUME__.lastRouteChange = new Date().getTime()
 
   app.data.__PLUME__.initialized = true
 

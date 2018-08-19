@@ -26,7 +26,7 @@ Lightweight SPA library
           "/fixed/1": _ =>
             root([text("fixed route #1")]),
 
-          "/dynamic/?num": data =>
+          "/dynamic/:num": data =>
             root([text(`dynamic route [${data.num}]`)]),
 
           "*": _ =>

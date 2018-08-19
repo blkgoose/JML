@@ -17,13 +17,18 @@ const a = (link, name) => el('a', { href: link }, [text(name || link)])
 
 
 // special types
-const router = routes => {
+const router = (model, routes) => {
   let parsedRoute
   let hash = location.hash.substr(1)
   for (let route in routes)
     if (parsedRoute = parseRoute(hash, route))
       try {
-        return routes[route](...Object.values(parsedRoute))
+        if (model.__PLUME__.routerData.hash != hash)
+          model.__PLUME__.routerData = {
+            data: parsedRoute,
+            hash: hash
+          }
+        return routes[route](model.__PLUME__.routerData.data)
       } catch (error) {
         if (error.name == "RouteNotValid")
           continue
@@ -87,7 +92,7 @@ const clamp = (num, min, max) =>
  * @param {route to be checked with} route
  */
 const parseRoute = (hash, route) => {
-  if (route.indexOf("?") == -1) {
+  if (route.indexOf(":") == -1) {
     if (route == hash || route == "*")
       return {}
   }
@@ -102,7 +107,7 @@ const parseRoute = (hash, route) => {
     for (let i in route) {
       let x = route[i]
 
-      if (x.indexOf("?") == 0)
+      if (x.indexOf(":") == 0)
         data[x.substr(1)] = hash[i]
       else
         if (x != hash[i])
