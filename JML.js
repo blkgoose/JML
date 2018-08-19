@@ -51,6 +51,17 @@ const router = (model, routes) => {
 }
 const root = (c) => div({}, c)
 const text = (string = "") => el('_TEXT', { content: string }, [])
+const jsonTable = (data) => {
+  let headers = Object.keys(data[0])
+  return table({}, [
+    tr({}, headers.map(x => th({}, [text(x.replace("_", " "))]))),
+    ...data.map(row =>
+      tr({}, [
+        ...headers.map(h => td({}, [text(row[h])]))
+      ])
+    )
+  ])
+}
 
 // functions
 
