@@ -31,7 +31,7 @@ Lightweight SPA library
       "*": _ =>
         root([h("404 PAGE NOT FOUND", 1)]),
     })
-    )
+  )
 </script>
 ```
 
