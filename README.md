@@ -3,7 +3,7 @@ Lightweight SPA library
 
 CDN: https://cdn.rawgit.com/blkgoose/Plume/master/Plume.min.js
 
-#### Hello World example
+#### Hello World
 
 ```html
 <!DOCTYPE html>
@@ -16,7 +16,27 @@ CDN: https://cdn.rawgit.com/blkgoose/Plume/master/Plume.min.js
 </script>
 ```
 
-#### Routing example
+### Data binding
+
+```html
+<!DOCTYPE html>
+
+<script src="https://cdn.rawgit.com/blkgoose/Plume/master/Plume.min.js"></script>
+<script>
+  Plume(model =>
+    root([
+      input({
+        oninput: e => model.text = e.value
+      }),
+      br(),
+      text(`input: ${model.text || ""}`)
+    ])
+  )
+</script>
+```
+
+
+#### Routing
 ```html
 <!DOCTYPE html>
 
