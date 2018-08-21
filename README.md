@@ -57,6 +57,6 @@ CDN: https://cdn.rawgit.com/blkgoose/Plume/master/Plume.min.js
 </script>
 ```
 
-The Plume function returns the model object of the app,
+The Plume function returns the model Object of the app,
 if the binding element isn't set (third parameter),
 the function returns a Promise of the model.

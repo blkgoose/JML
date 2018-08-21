@@ -1,62 +1,54 @@
-let oldView
+import DeepProxy from "./DeepProxy.js"
+import { text, div, style } from "./JML.js";
+
+export class PlumeElement {
+  constructor(type, p, c) {
+    this.type = type
+    this.prop = p
+    this.childs = c
+  }
+}
 
 /**
  * virual DOM element
  *
- * @param {type of the element (i.e. "div")} type
- * @param {props} p
- * @param {childs} c
+ * @param {!string} type
+ * @param {?Object} p
+ * @param {?Array} c
  */
-const el = (type, p = {}, c = []) => {
-  return { type: type, prop: p, childs: c }
-}
-
-/**
- * deep compares two objects and returns wheter they differ or not
- *
- * @param {first object} obj1
- * @param {object to compare with} obj2
- */
-const compare = (obj1, obj2) => {
-  if (typeof (obj1) !== typeof (obj2))
-    return false
-
-  if (obj1 instanceof Function && obj2 instanceof Function)
-    return obj1.toString() === obj2.toString()
-
-  if (!(obj1 instanceof Object) && !(obj2 instanceof Object))
-    return Object.is(obj1, obj2)
-
-  if (Object.keys(obj1).length !== Object.keys(obj2).length)
-    return false
-
-  if (Object.keys(obj1).length === 0)
-    return true
-
-  for (let p in obj1)
-    if (!compare(obj1[p], obj2[p]))
-      return false
-  return true
+export const el = (type, p = {}, c = []) => {
+  return new PlumeElement(type, p, c)
 }
 
 /**
  * actual working part
  *
- * @param {view function} view
- * @param {starting model} model
- * @param {root to apply the program to} $root
+ * @param {!Function} view
+ * @param {?Object} model
+ * @param {?Node} $root
  */
-const Plume = (view, model = {}, $root) => {
+export const Plume = (view, model = {}, $root = undefined) => {
+  let oldView
+
   /**
    * converts an element to actual HTMLNode
    *
-   * @param {node to create} node
+   * @param {PlumeElement} node
    */
   const create = (node) => {
+    if (!(node instanceof PlumeElement))
+      return create(text(""))
+
     if (node.type.indexOf("_") == 0)
       switch (node.type) {
         case "_TEXT":
           return document.createTextNode(node.prop.content)
+        case "_SHADOW":
+          let _shadowRoot = create(el("plume-component"))
+          let _shadow = _shadowRoot.attachShadow(node.prop.shadow)
+          _shadow.appendChild(create(node.prop.template))
+          _shadow.appendChild(create(style({}, node.prop.css)))
+          return _shadowRoot
       }
     const $el = document.createElement(node.type)
     createProps($el, node.prop)
@@ -73,28 +65,47 @@ const Plume = (view, model = {}, $root) => {
   /**
    * set or updates the element props
    *
-   * @param {element to set the prop for} $el
-   * @param {name of the prop} name
-   * @param {value of the prop} value
-   * @param {defines if is update or creation time} isBeingCreated
+   * @param {!Node} $el
+   * @param {!string} name
+   * @param {!Function} value
    */
-  const setProp = ($el, name, value, isBeingCreated = false) => {
+  const setProp = ($el, name, value) => {
+    /**
+     * @param {!Node} $$el
+     * @param {!string} n
+     * @param {!Function} v
+     */
     const setAttr = ($$el, n, v) => {
       $$el.setAttribute(n, v)
       $$el[n] = v
     }
+
+    /**
+     * handles special props
+     * @param {!Node} $$el
+     * @param {!string} n
+     * @param {!Function} v
+     */
+    const specialProp = ($$el, n, v) => {
+      switch (n) {
+        case "style":
+          Object.keys(v)
+            .forEach(p =>
+              $$el.style[p] = v[p]
+            )
+          return true
+      }
+      return false
+    }
+
     name = name.toLowerCase()
 
-    if (RegExp("^on").test(name))
-      switch (name) {
-        case "oncreate": if (isBeingCreated) value($el)
-          break
-        default:
-          $el.addEventListener(
-            name.slice(2),
-            e => value($el, e)
-          )
-      }
+    if (specialProp($el, name, value) !== false) { return }
+    else if (RegExp("^on").test(name))
+      $el.addEventListener(
+        name.slice(2),
+        e => value($el, e)
+      )
     else
       if (typeof value === "boolean") {
         if (value) setAttr($el, name, value)
@@ -106,22 +117,28 @@ const Plume = (view, model = {}, $root) => {
   /**
    * creates the props for the given element.
    *
-   * @param {element to crete props for} $el
-   * @param {props object with name and value} props
+   * @param {!Element} $el
+   * @param {!Object} props
    */
   const createProps = ($el, props) =>
     Object.keys(props).forEach(name =>
-      setProp($el, name, props[name], true))
+      setProp($el, name, props[name]))
 
   /**
    * updates the props for the given item,
    * actual prop diffing part.
    *
-   * @param {element to update} $el
-   * @param {set of new props} newProps
-   * @param {set of old props} oldProps
+   * @param {!Node} $el
+   * @param {!Object<string,Function>} newProps
+   * @param {!Object<string,Function>} oldProps
    */
   const updateProps = ($el, newProps, oldProps = {}) => {
+    /**
+     * @param {!Node} $$el
+     * @param {!string} name
+     * @param {Function} newProp
+     * @param {Function} oldProp
+     */
     const updateProp = ($$el, name, newProp, oldProp) => {
       if (!newProp)
         $$el.removeAttribute(name)
@@ -143,10 +160,10 @@ const Plume = (view, model = {}, $root) => {
   /**
    * virtual dom diffing part
    *
-   * @param {parent being checked} $parent
-   * @param {node on new view} newNode
-   * @param {node on old view} oldNode
-   * @param {current deepness index} index
+   * @param {?Node|undefined} $parent
+   * @param {?PlumeElement} newNode
+   * @param {?PlumeElement} oldNode
+   * @param {number} index
    */
   const update = ($parent, newNode, oldNode, index = 0) => {
     if (!oldNode)
@@ -158,8 +175,8 @@ const Plume = (view, model = {}, $root) => {
         $parent.childNodes[index]
       )
     else if (
-      newNode.type !== oldNode.type
-      || newNode.childs.length !== oldNode.childs.length
+      newNode.type !== oldNode.type ||
+      newNode.childs.length !== oldNode.childs.length
     )
       $parent.replaceChild(
         create(newNode),
@@ -171,14 +188,12 @@ const Plume = (view, model = {}, $root) => {
         newNode.prop,
         oldNode.prop
       )
-      range(Math.max(newNode.childs.length, oldNode.childs.length))
-        .forEach(i =>
-          update(
-            $parent.childNodes[index],
-            newNode.childs[i],
-            oldNode.childs[i],
-            i
-          )
+      for (let i = 0; i < Math.max(newNode.childs.length, oldNode.childs.length); i++)
+        update(
+          $parent.childNodes[index],
+          newNode.childs[i],
+          oldNode.childs[i],
+          i
         )
     }
   }
@@ -186,7 +201,7 @@ const Plume = (view, model = {}, $root) => {
   /**
    * converts the [[view]] function to a real working view
    *
-   * @param {model to generate the view from} model
+   * @param {!Object} model
    */
   const _VIEW = model => {
     model.doCallback = false
@@ -200,7 +215,7 @@ const Plume = (view, model = {}, $root) => {
   // if root is not defined, initialize base Plume stuff.
   if (!$root)
     return new Promise(res => {
-      onload = () => res(Plume(view, model, document.body))
+      window.onload = () => res(Plume(view, model, document.body))
     })
 
   model.__PLUME__ = {
@@ -211,10 +226,12 @@ const Plume = (view, model = {}, $root) => {
   }
 
   let app = new DeepProxy(_VIEW, model)
-  onhashchange = _ =>
+  window.onhashchange = _ =>
     app.data.__PLUME__.lastRouteChange = new Date().getTime()
 
   app.data.__PLUME__.initialized = true
 
   return app.data
 }
+
+export default Plume

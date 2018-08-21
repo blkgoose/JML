@@ -1,90 +1,189 @@
+import { el, PlumeElement } from "./Plume.js"
+export default null
+
 // basic HTML elements
-const div = (p, c) => el('div', p, c)
-const span = (p, c) => el('span', p, c)
-const br = (p = {}) => el('br', p)
-const hr = (p = {}) => el('hr', p)
-const button = (p, c) => el('button', p, c)
-const header = (p, c) => el('header', p, c)
-const navbar = (p, c) => el('nav', p, c)
-const footer = (p, c) => el('footer', p, c)
-const article = (p, c) => el('article', p, c)
-const input = (p) => el('input', p, [])
-const textarea = (p) => el('textarea', p, [])
-const table = (p, c) => el('table', p, c)
-const tr = (p, c) => el('tr', p, c)
-const td = (p, c) => el('td', p, c)
-const th = (p, c) => el('th', p, c)
-const p = (p, c) => el('p', p, c)
+/**
+ * @param {Object<string,*>} p
+ * @param {Array<PlumeElement>} c
+ */
+export const div = (p = {}, c = []) => el('div', p, c)
+/**
+ * @param {Object<string,*>} p
+ * @param {Array<PlumeElement>} c
+ */
+export const span = (p = {}, c = []) => el('span', p, c)
+/**
+ * @param {Object<string,*>} p
+ */
+export const br = (p = {}) => el('br', p)
+/**
+ * @param {Object<string,*>} p
+ */
+export const hr = (p = {}) => el('hr', p)
+/**
+ * @param {Object<string,*>} p
+ * @param {Array<PlumeElement>} c
+ */
+export const button = (p = {}, c = []) => el('button', p, c)
+/**
+ * @param {Object<string,*>} p
+ * @param {Array<PlumeElement>} c
+ */
+export const header = (p = {}, c = []) => el('header', p, c)
+/**
+ * @param {Object<string,*>} p
+ * @param {Array<PlumeElement>} c
+ */
+export const navbar = (p = {}, c = []) => el('nav', p, c)
+/**
+ * @param {Object<string,*>} p
+ * @param {Array<PlumeElement>} c
+ */
+export const footer = (p = {}, c = []) => el('footer', p, c)
+/**
+ * @param {Object<string,*>} p
+ * @param {Array<PlumeElement>} c
+ */
+export const article = (p = {}, c = []) => el('article', p, c)
+/**
+ * @param {Object<string,*>} p
+ */
+export const input = (p = {}) => el('input', p, [])
+/**
+ * @param {Object<string,*>} p
+ */
+export const textarea = (p = {}) => el('textarea', p, [])
+/**
+ * @param {Object<string,*>} p
+ * @param {Array<PlumeElement>} c
+ */
+export const table = (p = {}, c = []) => el('table', p, c)
+/**
+ * @param {Object<string,*>} p
+ * @param {Array<PlumeElement>} c
+ */
+export const tr = (p = {}, c = []) => el('tr', p, c)
+/**
+ * @param {Object<string,*>} p
+ * @param {Array<PlumeElement>} c
+ */
+export const td = (p = {}, c = []) => el('td', p, c)
+/**
+ * @param {Object<string,*>} p
+ * @param {Array<PlumeElement>} c
+ */
+export const th = (p = {}, c = []) => el('th', p, c)
+/**
+ * @param {Object<string,*>} p
+ * @param {Array<PlumeElement>} c
+ */
+export const p = (p = {}, c = []) => el('p', p, c)
+/**
+ * @param {Object<string,*>} p
+ * @param {Array<PlumeElement>} c
+ */
+export const b = (p = {}, c = []) => el('b', p, c)
+/**
+ * @param {Object<string,*>} p
+ * @param {string} string
+ * @param {number} size
+ */
+export const h = (p = {}, string = "", size = 3) => el(`h${clamp(size, 1, 6)}`, p, [text(string)])
+/**
+ * @param {Object<string,*>} p
+ * @param {!string} link
+ * @param {?string} name
+ */
+export const a = (p, link, name) => {
+  p.href = link
+  return el('a', { href: link }, [text(name || link)])
+}
+/**
+ * @param {Object<string,*>} p
+ * @param {!Object<string,!Object>} style
+ */
+export const style = (p = {}, style = {}) => {
+  let _style = Object.keys(style)
+    .map(_el => {
+      let _body =
+        Object.keys(style[_el])
+          .map(_a => `${_a}:${style[_el][_a]}`)
+      return `${_el} {${_body}}`
+    }).join("\n")
 
-const b = (string) => el('b', p, [text(string)])
-const h = (string, size = 3, p) => el(`h${clamp(size, 1, 6)}`, p, [text(string)])
-const a = (link, name) => el('a', { href: link }, [text(name || link)])
-
+  return el("style", p, [text(_style)])
+}
 
 // special types
-const router = (model, routes) => {
+/**
+ * @param {string} content
+ */
+export const text = (content = "") => el('_TEXT', { content: content }, [])
+
+/**
+ * @param {Object} model
+ * @param {Object<string,Function>} routes
+ */
+export const router = (model, routes) => {
   // TODO2: update performance
   let parsedRoute
   let hash = location.hash.substr(1)
   for (let route in routes)
-    if (parsedRoute = parseRoute(hash, route))
-      try {
-        if (model.__PLUME__.routerData.hash != hash)
-          model.__PLUME__.routerData = {
-            data: parsedRoute,
-            hash: hash
-          }
-        setTimeout(() => {
-          try {
-            window.scrollTo(0, 0)
-            document.querySelector("[autofocus]").focus()
-          } catch (_) { }
-        })
-        return routes[route](model.__PLUME__.routerData.data)
-      } catch (error) {
-        if (error.name == "RouteNotValid")
-          continue
-        else
-          throw error
-      }
+    if (parsedRoute = parseRoute(hash, route)) {
+      if (model.__PLUME__.routerData.hash != hash)
+        model.__PLUME__.routerData = {
+          data: parsedRoute,
+          hash: hash
+        }
+      setTimeout(() => {
+        try {
+          window.scrollTo(0, 0)
+          document.querySelector("[autofocus]").focus()
+        } catch (_) { }
+      })
+      return routes[route](model.__PLUME__.routerData.data)
+    }
   return text()
 }
-const root = (c) => div({}, c)
-const text = (string = "") => el('_TEXT', { content: string }, [])
-const jsonTable = (data) => {
+/**
+ * shorthand for div with no props
+ * @param {Array<PlumeElement>} c
+ */
+export const root = (c) => div({}, c)
+/**
+ * a complex table made from a json table
+ * @param {!Array<!Object<string,*>>} data
+ */
+export const jsonTable = (data) => {
   let headers = Object.keys(data[0])
   return table({}, [
     tr({}, headers.map(x => th({}, [text(x.replace("_", " "))]))),
     ...data.map(row =>
       tr({}, [
-        ...headers.map(h => td({}, [text(row[h])]))
+        ...headers.map(h => td({}, [text(row[h].toString())]))
       ])
     )
   ])
 }
+/**
+ * a scoped component for complex elements
+ * @param {!Object<string,Function>} o
+ */
+export const component = (o) =>
+  el("_SHADOW",
+    Object.assign({
+      css: "",
+      shadow: { mode: "closed" },
+      template: null
+    }, o)
+  )
 
 // functions
-
-/**
- * use this to skip the route if data is not correct
- * 
- * @param {assert} condition 
- * @param {optional message to show} message 
- */
-const rAssert = (condition, message = "") => {
-  const RouteNotValidError = m => {
-    return { name: "RouteNotValid", message: m }
-  }
-
-  if (!condition) throw RouteNotValidError(message)
-}
-
 /**
  * re-routes to a new route
- *
- * @param {route to go to} route
+ * @param {!string} route
  */
-const goto = (route) =>
+export const goto = (route) =>
   window.location =
   location.href.replace(location.hash, "").replace(RegExp("#$"), '')
   + "#/"
@@ -92,12 +191,11 @@ const goto = (route) =>
 
 /**
  * generates an array containing numbers based on this algorithm
- *
- * @param {starting point} from
- * @param {ending point} to
- * @param {skip n each iteration} skip
+ * @param {!number} from
+ * @param {?number} to
+ * @param {?number} skip
  */
-const range = (from, to, skip = 1) =>
+export const range = (from, to, skip = 1) =>
   [...Array(to || from).keys()]
     .map(x => x * skip)
     .map(x => x + (to ? from : 0))
@@ -105,20 +203,18 @@ const range = (from, to, skip = 1) =>
 
 /**
  * clamp the number between two values
- *
- * @param {number to clamp} num
- * @param {left limit} min
- * @param {right limit} max
+ * @param {!number} num
+ * @param {!number} min
+ * @param {!number} max
  */
-const clamp = (num, min, max) =>
+export const clamp = (num, min, max) =>
   num > max ? max : num < min ? min : num
 
 /**
  * compares the hash with the route,
- * returns an object containing variables found in route
- *
- * @param {hash to check (location.hash)} hash
- * @param {route to be checked with} route
+ * returns an Object containing variables found in route
+ * @param {!string} hash
+ * @param {!string} route
  */
 const parseRoute = (hash, route) => {
   if (route.indexOf(":") == -1) {
@@ -126,20 +222,21 @@ const parseRoute = (hash, route) => {
       return {}
   }
   else {
-    hash = hash.split("/")
-    route = route.split("/")
+    let _hash = hash.split("/")
+    let _route = route.split("/")
 
-    if (hash.length != route.length)
+    if (_hash.length != _route.length)
       return false
+
     let data = {}
 
-    for (let i in route) {
-      let x = route[i]
+    for (let i = 0; i < _route.length; i++) {
+      let x = _route[i]
 
       if (x.indexOf(":") == 0)
-        data[x.substr(1)] = hash[i]
+        data[x.substr(1)] = _hash[i]
       else
-        if (x != hash[i])
+        if (x != _hash[i])
           return false
     }
     return data
