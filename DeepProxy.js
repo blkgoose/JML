@@ -7,7 +7,6 @@ export default class DeepProxy {
   constructor(onUpdateCallBack, initialModel = {}, UDhandler = undefined) {
     /**
      * deep compares two Objects and returns wheter they differ or not
-     *
      * @param {!Object} obj1
      * @param {!Object} obj2
      */
@@ -35,7 +34,6 @@ export default class DeepProxy {
 
     /**
      * turns a nested object in a nested proxy
-     *
      * @param {Object} obj
      * @param {!ProxyHandler<?>} handler
      */

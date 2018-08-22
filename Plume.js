@@ -1,5 +1,5 @@
 import DeepProxy from "./DeepProxy.js"
-import { text, div, style } from "./JML.js";
+import { text, div, style } from "./JML.js"
 
 export class PlumeElement {
   constructor(type, p, c) {
@@ -11,7 +11,6 @@ export class PlumeElement {
 
 /**
  * virual DOM element
- *
  * @param {!string} type
  * @param {?Object} p
  * @param {?Array} c
@@ -22,7 +21,6 @@ export const el = (type, p = {}, c = []) => {
 
 /**
  * actual working part
- *
  * @param {!Function} view
  * @param {?Object} model
  * @param {?Node} $root
@@ -32,14 +30,10 @@ export const Plume = (view, model = {}, $root = undefined) => {
 
   /**
    * converts an element to actual HTMLNode
-   *
    * @param {PlumeElement} node
    */
   const create = (node) => {
-    if (!(node instanceof PlumeElement))
-      return create(text(""))
-
-    if (node.type.indexOf("_") == 0)
+    const doSpecialCreate = (_node) => {
       switch (node.type) {
         case "_TEXT":
           return document.createTextNode(node.prop.content)
@@ -50,11 +44,14 @@ export const Plume = (view, model = {}, $root = undefined) => {
           _shadow.appendChild(create(style({}, node.prop.css)))
           return _shadowRoot
       }
-    const $el = document.createElement(node.type)
-    createProps($el, node.prop)
+      return false
+    }
 
-    if (!(node.childs instanceof Array))
-      throw Error("node childs should be in array...")
+    let $el
+    if (($el = doSpecialCreate(node)) !== false) { return $el }
+
+    $el = document.createElement(node.type)
+    createProps($el, node.prop)
 
     node.childs
       .map(create)
@@ -64,7 +61,6 @@ export const Plume = (view, model = {}, $root = undefined) => {
 
   /**
    * set or updates the element props
-   *
    * @param {!Node} $el
    * @param {!string} name
    * @param {!Function} value
@@ -116,7 +112,6 @@ export const Plume = (view, model = {}, $root = undefined) => {
 
   /**
    * creates the props for the given element.
-   *
    * @param {!Element} $el
    * @param {!Object} props
    */
@@ -127,7 +122,6 @@ export const Plume = (view, model = {}, $root = undefined) => {
   /**
    * updates the props for the given item,
    * actual prop diffing part.
-   *
    * @param {!Node} $el
    * @param {!Object<string,Function>} newProps
    * @param {!Object<string,Function>} oldProps
@@ -159,7 +153,6 @@ export const Plume = (view, model = {}, $root = undefined) => {
 
   /**
    * virtual dom diffing part
-   *
    * @param {?Node|undefined} $parent
    * @param {?PlumeElement} newNode
    * @param {?PlumeElement} oldNode
@@ -200,7 +193,6 @@ export const Plume = (view, model = {}, $root = undefined) => {
 
   /**
    * converts the [[view]] function to a real working view
-   *
    * @param {!Object} model
    */
   const _VIEW = model => {
