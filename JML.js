@@ -130,17 +130,18 @@ export const router = (model, routes) => {
   let hash = location.hash.substr(1)
   for (let route in routes)
     if (parsedRoute = parseRoute(hash, route)) {
-      if (model.__PLUME__.routerData.hash != hash)
+      if (model.__PLUME__.routerData.hash != hash) {
         model.__PLUME__.routerData = {
           data: parsedRoute,
           hash: hash
         }
-      setTimeout(() => {
-        try {
-          window.scrollTo(0, 0)
-          document.querySelector("[autofocus]").focus()
-        } catch (_) { }
-      })
+        setTimeout(() => {
+          try {
+            window.scrollTo(0, 0)
+            document.querySelector("[autofocus]").focus()
+          } catch (_) { }
+        })
+      }
       return routes[route](model.__PLUME__.routerData.data)
     }
   return text()
