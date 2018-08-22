@@ -1,8 +1,6 @@
 # Plume
 Lightweight SPA library
 
-CDN: https://cdn.rawgit.com/blkgoose/Plume/master/Plume.min.js
-
 #### Hello World
 
 ```html
@@ -56,10 +54,10 @@ CDN: https://cdn.rawgit.com/blkgoose/Plume/master/Plume.min.js
 </script>
 ```
 
-The Plume function returns the model Object of the app,
-if the binding element isn't set (third parameter),
-the function returns a Promise of the model.
-
 ## Use the CDN for prototyping,
 ## download Plume as library and compile with Google Closure Compiler
 ## (non mandatory for modern browsers)
+
+The Plume function returns the model Object of the app,
+if the binding element isn't set (third parameter),
+the function returns a Promise of the model.
