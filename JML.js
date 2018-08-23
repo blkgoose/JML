@@ -1,5 +1,15 @@
-import { el, PlumeElement } from "./Plume.js"
-export default null
+import { PlumeElement } from "./Plume.js"
+
+/**
+ * virual DOM element
+ * @param {!string} type
+ * @param {?Object} p
+ * @param {?Array} c
+ */
+export const el = (type, p = {}, c = []) => {
+  return new PlumeElement(type, p, c)
+}
+export default el
 
 // basic HTML elements
 /**
@@ -119,6 +129,7 @@ export const style = (p = {}, style = {}) => {
  * @param {string} content
  */
 export const text = (content = "") => el('_TEXT', { content: content }, [])
+export const empty = () => text("")
 
 /**
  * @param {Object} model
@@ -195,6 +206,7 @@ export const goto = (route) =>
  * @param {!number} from
  * @param {?number} to
  * @param {?number} skip
+ * @returns {Array<number>}
  */
 export const range = (from, to, skip = 1) =>
   [...Array(to || from).keys()]

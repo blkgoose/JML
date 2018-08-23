@@ -1,5 +1,5 @@
 import DeepProxy from "./DeepProxy.js"
-import { text, div, style } from "./JML.js"
+import { style } from "./JML.js"
 
 export class PlumeElement {
   constructor(type, p, c) {
