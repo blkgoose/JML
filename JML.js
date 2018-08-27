@@ -195,11 +195,10 @@ export const component = (o) =>
  * re-routes to a new route
  * @param {!string} route
  */
-export const goto = (route) =>
-  window.location =
-  location.href.replace(location.hash, "").replace(RegExp("#$"), '')
-  + "#/"
-  + route.replace(RegExp("^/"), '')
+export const goto = (route) => {
+  location.hash = `#${route.startsWith("/") ? "" : "/"}${route}`
+  // history.pushState({}, "", location)
+}
 
 /**
  * generates an array containing numbers based on this algorithm

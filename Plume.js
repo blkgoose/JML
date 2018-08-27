@@ -20,37 +20,52 @@ export const el = (type, p = {}, c = []) => {
 }
 
 /**
- * actual working part
+ * Plume main function
  * @param {!Function} view
  * @param {?Object} model
  * @param {?Node} $root
  */
-export const Plume = (view, model = {}, $root = undefined) => {
+export const Plume = (view, model = {}, options = {}, $root = undefined) => {
   let oldView
+
+  let plumeOptions = Object.assign({
+    specialTypes: {
+      "_TEXT": element => document.createTextNode(element.prop.content),
+      "_SHADOW": element => {
+        let _shadowRoot = create(el("plume-component"))
+        let _shadow = _shadowRoot.attachShadow(element.prop.shadow)
+        _shadow.appendChild(create(element.prop.template))
+        _shadow.appendChild(create(style({}, element.prop.css)))
+        return _shadowRoot
+      }
+    },
+    specialProps: {
+      "style": (element, style) =>
+        Object.keys(style)
+          .forEach(p => {
+            let attr = p.replace(/([A-Z])/g, "-$1").toLowerCase()
+            let prop = style[attr]
+            let important = ""
+
+            if (style[p] instanceof Array) {
+              prop = style[p][0]
+              important = style[p][1]
+            }
+
+            element.style.setProperty(attr, prop, important)
+          })
+    }
+  })
 
   /**
    * converts an element to actual HTMLNode
    * @param {PlumeElement} node
    */
   const create = (node) => {
-    const doSpecialCreate = (_node) => {
-      switch (node.type) {
-        case "_TEXT":
-          return document.createTextNode(node.prop.content)
-        case "_SHADOW":
-          let _shadowRoot = create(el("plume-component"))
-          let _shadow = _shadowRoot.attachShadow(node.prop.shadow)
-          _shadow.appendChild(create(node.prop.template))
-          _shadow.appendChild(create(style({}, node.prop.css)))
-          return _shadowRoot
-      }
-      return false
-    }
+    if (node.type in plumeOptions.specialTypes)
+      return plumeOptions.specialTypes[node.type](node)
 
-    let $el
-    if (($el = doSpecialCreate(node)) !== false) { return $el }
-
-    $el = document.createElement(node.type)
+    let $el = document.createElement(node.type)
     createProps($el, node.prop)
 
     node.childs
@@ -76,27 +91,10 @@ export const Plume = (view, model = {}, $root = undefined) => {
       $$el[n] = v
     }
 
-    /**
-     * handles special props
-     * @param {!Node} $$el
-     * @param {!string} n
-     * @param {!Function} v
-     */
-    const specialProp = ($$el, n, v) => {
-      switch (n) {
-        case "style":
-          Object.keys(v)
-            .forEach(p =>
-              $$el.style[p] = v[p]
-            )
-          return true
-      }
-      return false
-    }
-
     name = name.toLowerCase()
 
-    if (specialProp($el, name, value) !== false) { return }
+    if (name in plumeOptions.specialProps)
+      return plumeOptions.specialProps[name]($el, value)
     else if (RegExp("^on").test(name))
       $el.addEventListener(
         name.slice(2),
@@ -207,7 +205,7 @@ export const Plume = (view, model = {}, $root = undefined) => {
   // if root is not defined, initialize base Plume stuff.
   if (!$root)
     return new Promise(res => {
-      window.onload = () => res(Plume(view, model, document.body))
+      window.onload = () => res(Plume(view, model, options, document.body))
     })
 
   model.__PLUME__ = {
