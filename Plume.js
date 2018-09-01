@@ -44,18 +44,14 @@ export const Plume = (view, model = {}, options = {}, $root = undefined) => {
         Object.keys(style)
           .forEach(p => {
             let attr = p.replace(/([A-Z])/g, "-$1").toLowerCase()
-            let prop = style[attr]
-            let important = ""
-
-            if (style[p] instanceof Array) {
-              prop = style[p][0]
-              important = style[p][1]
-            }
+            let hasImportant = style[p] instanceof Array
+            let prop = hasImportant ? style[p][0] : style[attr]
+            let important = hasImportant ? style[p][1] : ""
 
             element.style.setProperty(attr, prop, important)
           })
     }
-  })
+  }, options)
 
   /**
    * converts an element to actual HTMLNode

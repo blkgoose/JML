@@ -106,7 +106,7 @@ export const h = (p = {}, string = "", size = 3) => el(`h${clamp(size, 1, 6)}`, 
  */
 export const a = (p, link, name) => {
   p.href = link
-  return el('a', { href: link }, [text(name || link)])
+  return el('a', p, [text(name || link)])
 }
 /**
  * @param {Object<string,*>} p
