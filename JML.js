@@ -123,6 +123,11 @@ export const style = (p = {}, style = {}) => {
 
   return el("style", p, [text(_style)])
 }
+/**
+ * @param {Object<string,*>} p
+ * @param {Array<PlumeElement>} c
+ */
+export const iframe = (p = {}, c = []) => el('iframe', p, c)
 
 // special types
 /**
@@ -195,6 +200,7 @@ export const component = (o) =>
  * re-routes to a new route
  * @param {!string} route
  */
+//TODO: fix back button
 export const goto = (route) => {
   location.hash = `#${route.startsWith("/") ? "" : "/"}${route}`
   // history.pushState({}, "", location)
