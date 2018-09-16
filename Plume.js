@@ -40,12 +40,16 @@ export const Plume = (view, model = {}, options = {}, $root = undefined) => {
       }
     },
     specialProps: {
-      "class": (element, classes) =>
+      "class": (element, classes) => {
+        if (!(classes instanceof Array))
+          throw new Error("Classes should be in array")
+
         classes
           .filter(_ => _)
           .forEach(c =>
             element.classList.add(c)
-          ),
+          )
+      },
       "style": (element, style) =>
         Object.keys(style)
           .forEach(p => {

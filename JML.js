@@ -58,7 +58,11 @@ export const article = (p = {}, c = []) => el('article', p, c)
 /**
  * @param {Object<string,*>} p
  */
-export const input = (p = {}) => el('input', p, [])
+export const input = (p = {}) =>
+  el('input',
+    Object.assign({ placeholder: "", oninvalid: (el, e) => e.preventDefault() }, p),
+    []
+  )
 /**
  * @param {Object<string,*>} p
  */
@@ -128,6 +132,20 @@ export const style = (p = {}, style = {}) => {
  * @param {Array<PlumeElement>} c
  */
 export const iframe = (p = {}, c = []) => el('iframe', p, c)
+/**
+ * @param {Object<string,*>} p
+ * @param {Array<PlumeElement>} c
+ */
+export const form = (p = {}, c = []) => el('form',
+  Object.assign({
+    method: ""
+  }, p), c)
+/**
+ * @param {Object<string,*>} p
+ * @param {Array<PlumeElement>} c
+ */
+export const img = (p = {}, c = []) => el('img', p, c)
+
 
 // special types
 /**
@@ -142,13 +160,14 @@ export const empty = () => text("")
  */
 export const router = (model, routes) => {
   // TODO2: update performance
+
   let parsedRoute
   let hash = location.hash.substr(1)
   for (let route in routes)
     if (parsedRoute = parseRoute(hash, route)) {
       if (model.__PLUME__.routerData.hash != hash) {
         model.__PLUME__.routerData = {
-          data: parsedRoute,
+          data: Object.assign({ _errors: [] }, parsedRoute),
           hash: hash
         }
         setTimeout(() => {
