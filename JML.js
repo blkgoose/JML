@@ -60,7 +60,10 @@ export const article = (p = {}, c = []) => el('article', p, c)
  */
 export const input = (p = {}) =>
   el('input',
-    Object.assign({ placeholder: "", oninvalid: (el, e) => e.preventDefault() }, p),
+    Object.assign({
+      placeholder: " ",
+      oninvalid: (el, e) => e.preventDefault()
+    }, p),
     []
   )
 /**
@@ -145,7 +148,6 @@ export const form = (p = {}, c = []) => el('form',
  * @param {Array<PlumeElement>} c
  */
 export const img = (p = {}, c = []) => el('img', p, c)
-
 
 // special types
 /**
