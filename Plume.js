@@ -9,6 +9,12 @@ export class PlumeElement {
   }
 }
 
+export const doWithoutBind = (model, c) => {
+  model.doCallback = false
+  c(model)
+  model.doCallback = true
+}
+
 /**
  * virual DOM element
  * @param {!string} type
@@ -101,13 +107,10 @@ export const Plume = (view, model = {}, options = {}, $root = undefined) => {
 
     if (name in plumeOptions.specialProps)
       return plumeOptions.specialProps[name]($el, value)
-    else if (RegExp("^on").test(name))
-      $el.addEventListener(
-        name.slice(2),
-        e => value($el, e)
-      )
+    else if (value instanceof Function)
+      $el[name] = e => value($el, e)
     else
-      if (typeof value === "boolean") {
+      if (value instanceof Boolean) {
         if (value) setAttr($el, name, value)
       }
       else
@@ -200,9 +203,8 @@ export const Plume = (view, model = {}, options = {}, $root = undefined) => {
    * @param {!Object} model
    */
   const _VIEW = model => {
-    model.doCallback = false
-    let newView = view(model.data)
-    model.doCallback = true
+    let newView
+    doWithoutBind(model, () => newView = view(model.data))
 
     update($root, newView, oldView)
     oldView = newView
