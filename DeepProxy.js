@@ -20,16 +20,18 @@ export default class DeepProxy {
       if (!(obj1 instanceof Object) && !(obj2 instanceof Object))
         return Object.is(obj1, obj2)
 
-      if (Object.keys(obj1).length !== Object.keys(obj2).length)
-        return false
-
-      if (Object.keys(obj1).length === 0)
-        return true
-
-      for (let p in obj1)
-        if (!this.compare(obj1[p], obj2[p]))
+      if (obj1 instanceof Object && obj2 instanceof Object) {
+        if (Object.keys(obj1).length !== Object.keys(obj2).length)
           return false
-      return true
+
+        if (Object.keys(obj1).length === 0)
+          return true
+
+        for (let p in obj1)
+          if (!this.compare(obj1[p], obj2[p]))
+            return false
+        return true
+      }
     }
 
     /**
