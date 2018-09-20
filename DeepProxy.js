@@ -39,12 +39,12 @@ export default class DeepProxy {
      * @param {Object} obj
      * @param {!ProxyHandler<?>} handler
      */
-    this.proxify = (obj, handler, outObj = {}) => {
+    this.proxify = (obj, handler) => {
       for (let p in obj)
         if (obj[p] instanceof Object)
-          outObj[p] = new Proxy(this.proxify(obj[p], handler, outObj), handler)
+          obj[p] = new Proxy(this.proxify(obj[p], handler), handler)
 
-      return outObj
+      return obj
     }
 
 
