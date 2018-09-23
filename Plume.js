@@ -80,6 +80,9 @@ export const Plume = (view, model = {}, options = {}, $root = undefined) => {
     let $el = document.createElement(node.type)
     createProps($el, node.prop)
 
+    if (!(node.childs instanceof Array))
+      throw new Error("Elements should be in arrays")
+
     node.childs
       .map(create)
       .forEach($el.appendChild.bind($el))
