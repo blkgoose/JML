@@ -1,0 +1,13 @@
+{
+  "name": "Plume",
+  "src": [
+    "DeepProxy.js",
+    "Plume.js",
+    "JML.js"
+  ],
+  "output": "./Plume.min.js",
+  "includeReference": false,
+  "closure": {
+    "jscomp_warning": "checkTypes"
+  }
+}

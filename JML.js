@@ -149,6 +149,13 @@ export const form = (p = {}, c = []) => el('form',
  */
 export const img = (p = {}, c = []) => el('img', p, c)
 
+
+
+
+
+
+
+
 // special types
 /**
  * @param {string} content
@@ -205,7 +212,7 @@ export const jsonTable = (data) => {
 }
 /**
  * a scoped component for complex elements
- * @param {!Object<string,Function>} o
+ * @param {!Map<string,Function>} o
  */
 export const component = (o) =>
   el("_SHADOW",
