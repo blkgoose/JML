@@ -215,6 +215,30 @@ export const component = (o) =>
       template: null
     }, o)
   )
+/**
+ * switch case for elements
+ * @param {string} cond condition to switch on
+ * @param {!Object<string, Function>} cases
+ */
+export const when = (cond, cases) => {
+  try {
+    return cases[cond]()
+  } catch (e) {
+    try {
+      return cases["_default"]()
+    } catch (e2) {
+      throw new Error("default case not found, implement [_default] case")
+    }
+  }
+}
+
+
+
+
+
+
+
+
 
 // functions
 /**
