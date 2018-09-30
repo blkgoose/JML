@@ -148,7 +148,16 @@ export const form = (p = {}, c = []) => el('form',
  * @param {Array<PlumeElement>} c
  */
 export const img = (p = {}, c = []) => el('img', p, c)
-
+/**
+ * @param {Object<string,*>} p
+ * @param {Array<PlumeElement>} c
+ */
+export const select = (p = {}, c = []) => el('select', p, c)
+/**
+ * @param {Object<string,*>} p
+ * @param {Array<PlumeElement>} c
+ */
+export const option = (p = {}, c = []) => el('option', p, c)
 
 
 
@@ -252,7 +261,7 @@ export const when = (cond, cases) => {
  * re-routes to a new route
  * @param {!string} route
  */
-//TODO: fix back button
+//FIXME: back not working properly at times
 export const goto = (route) => {
   location.hash = `#${route.startsWith("/") ? "" : "/"}${route}`
   // history.pushState({}, "", location)
