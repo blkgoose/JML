@@ -297,7 +297,7 @@ export const clamp = (num, min, max) =>
  */
 const parseRoute = (hash, route) => {
   if (route.indexOf(":") == -1) {
-    if (route == hash || route == "*")
+    if (route == hash || route == "_")
       return {}
   }
   else {
