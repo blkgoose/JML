@@ -206,11 +206,12 @@ export const router = (model, routes) => {
 export const root = (c) => div({}, c)
 /**
  * a complex table made from a json table
+ * @param {Object<string,*>} p
  * @param {!Array<!Object<string,*>>} data
  */
-export const jsonTable = (data) => {
+export const jsonTable = (p = {}, data) => {
   let headers = Object.keys(data[0])
-  return table({}, [
+  return table(p, [
     tr({}, headers.map(x => th({}, [text(x.replace("_", " "))]))),
     ...data.map(row =>
       tr({}, [
@@ -236,14 +237,15 @@ export const component = (o) =>
  * @param {string} cond condition to switch on
  * @param {!Object<string, Function>} cases
  */
-export const when = (cond, cases) => {
+export const match = (cond, cases) => {
   try {
     return cases[cond]()
   } catch (e) {
     try {
-      return cases["_default"]()
+      return cases["_"]()
     } catch (e2) {
-      throw new Error("default case not found, implement [_default] case")
+      console.error("default case not found, implement [_] case")
+      throw e
     }
   }
 }
@@ -297,7 +299,7 @@ export const clamp = (num, min, max) =>
  */
 const parseRoute = (hash, route) => {
   if (route.indexOf(":") == -1) {
-    if (route == hash || route == "_")
+    if (route == hash || route == "*")
       return {}
   }
   else {
