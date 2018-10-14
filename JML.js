@@ -212,6 +212,8 @@ export const root = (c) => div({}, c)
 export const jsonTable = (p = {}, data = [{}]) => {
   //TODO: add column names for css selectors
 
+  if (data.length == 0) data = [{}]
+
   let headers = Object.keys(data[0])
   return table(p, [
     tr({}, headers.map(x => th({}, [text(x.replace("_", " "))]))),
