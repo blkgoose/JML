@@ -209,7 +209,9 @@ export const root = (c) => div({}, c)
  * @param {Object<string,*>} p
  * @param {!Array<!Object<string,*>>} data
  */
-export const jsonTable = (p = {}, data) => {
+export const jsonTable = (p = {}, data = [{}]) => {
+  //TODO: add column names for css selectors
+
   let headers = Object.keys(data[0])
   return table(p, [
     tr({}, headers.map(x => th({}, [text(x.replace("_", " "))]))),
@@ -244,8 +246,12 @@ export const match = (cond, cases) => {
     try {
       return cases["_"]()
     } catch (e2) {
-      console.error("default case not found, implement [_] case")
-      throw e
+      if (!cases.hasOwnProperty("_")) {
+        console.error("MatchError: _ case not found.\n", e)
+      } else {
+        console.error(e2)
+      }
+      throw null
     }
   }
 }
