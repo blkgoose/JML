@@ -5,9 +5,10 @@
     "Plume.js",
     "JML.js"
   ],
-  "output": "./Plume.min.js",
+  "output": "./Plume.bundle.js",
   "includeReference": false,
   "closure": {
+    "compilation_level": "BUNDLE",
     "jscomp_warning": "checkTypes"
   }
 }

@@ -209,7 +209,7 @@ export const root = (c) => div({}, c)
  * @param {Object<string,*>} p
  * @param {!Array<!Object<string,*>>} data
  */
-export const jsonTable = (p = {}, data) => {
+export const jsonTable = (p = {}, data = []) => {
   let headers = Object.keys(data[0])
   return table(p, [
     tr({}, headers.map(x => th({}, [text(x.replace("_", " "))]))),
