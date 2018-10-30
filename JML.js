@@ -203,7 +203,7 @@ export const router = (model, routes) => {
  * shorthand for div with no props
  * @param {Array<PlumeElement>} c
  */
-export const root = (c) => div({}, c)
+export const root = (c) => div({id: "plume-root"}, c)
 /**
  * a complex table made from a json table
  * @param {Object<string,*>} p
