@@ -58,16 +58,19 @@ export const Plume = (view, model = {}, options = {}, $root = undefined) => {
             element.classList.add(c)
           )
       },
-      "style": (element, style) =>
-        Object.keys(style)
-          .forEach(p => {
-            let attr = p.replace(/([A-Z])/g, "-$1").toLowerCase()
-            let hasImportant = style[p] instanceof Array
-            let prop = hasImportant ? style[p][0] : style[p]
-            let important = hasImportant ? style[p][1] : ""
+      "style": (element, style) => {
+        element.style = null
 
-            element.style.setProperty(attr, prop, important)
-          })
+        Object.keys(style)
+        .forEach(p => {
+          let attr = p.replace(/([A-Z])/g, "-$1").toLowerCase()
+          let hasImportant = style[p] instanceof Array
+          let prop = hasImportant ? style[p][0] : style[p]
+          let important = hasImportant ? style[p][1] : ""
+
+          element.style.setProperty(attr, prop, important)
+        })
+      }
     }
   }, options)
 
