@@ -5,7 +5,7 @@
     "Plume.js",
     "JML.js"
   ],
-  "output": "./Plume.min.js",
+  "output": "./Plume.bundle.js",
   "includeReference": false,
   "closure": {
     "jscomp_warning": "checkTypes"

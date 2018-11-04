@@ -158,6 +158,11 @@ export const select = (p = {}, c = []) => el('select', p, c)
  * @param {Array<PlumeElement>} c
  */
 export const option = (p = {}, c = []) => el('option', p, c)
+/**
+ * @param {Object<string,*>} p
+ * @param {Array<PlumeElement>} c
+ */
+export const i = (p = {}, c = []) => el('i', p, c)
 
 
 
@@ -176,9 +181,8 @@ export const empty = () => text("")
  * @param {Object} model
  * @param {Object<string,Function>} routes
  */
+//FIXME: do not update `data` on same route
 export const router = (model, routes) => {
-  // TODO2: update performance
-
   let parsedRoute
   let hash = location.hash.substr(1)
   for (let route in routes)
@@ -210,16 +214,14 @@ export const root = (c) => div({}, c)
  * @param {!Array<!Object<string,*>>} data
  */
 export const jsonTable = (p = {}, data = [{}]) => {
-  //TODO: add column names for css selectors
-
-  if (data.length == 0) data = [{}]
+  if (data.length == 0) return jsonTable(p)
 
   let headers = Object.keys(data[0])
   return table(p, [
-    tr({}, headers.map(x => th({}, [text(x.replace("_", " "))]))),
+    tr({}, headers.map(x => th({ class: [`column-${x}`] }, [text(x.replace("_", " "))]))),
     ...data.map(row =>
       tr({}, [
-        ...headers.map(h => td({}, [text(row[h].toString())]))
+        ...headers.map(h => td({ class: [`column-${h}`] }, [text(row[h])]))
       ])
     )
   ])

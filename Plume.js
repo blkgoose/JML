@@ -50,6 +50,8 @@ export const Plume = (view, model = {}, options = {}, $root = undefined) => {
         if (!(classes instanceof Array))
           throw new Error("Classes should be in array")
 
+        element.classList = []
+
         classes
           .filter(_ => _)
           .forEach(c =>
