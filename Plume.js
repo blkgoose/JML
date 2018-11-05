@@ -149,12 +149,11 @@ export const Plume = (view, model = {}, options = {}, $root = undefined) => {
      * @param {Function} oldProp
      */
     const updateProp = ($$el, name, newProp, oldProp) => {
-      if (!newProp)
+      if (!newProp) {
         $$el.removeAttribute(name)
-      else if (!oldProp || newProp !== oldProp && (!new DeepProxy().compare(oldProp, newProp) || newProp instanceof Function)) {
-        console.log(name, oldProp, newProp)
+        $$el[name] = null
+      } else if (!oldProp || newProp !== oldProp && (!new DeepProxy().compare(oldProp, newProp) || newProp instanceof Function))
         setProp($$el, name, newProp)
-      }
     }
 
     if ($el instanceof Text) {
