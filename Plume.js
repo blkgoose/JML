@@ -62,14 +62,14 @@ export const Plume = (view, model = {}, options = {}, $root = undefined) => {
         element.style = null
 
         Object.keys(style)
-        .forEach(p => {
-          let attr = p.replace(/([A-Z])/g, "-$1").toLowerCase()
-          let hasImportant = style[p] instanceof Array
-          let prop = hasImportant ? style[p][0] : style[p]
-          let important = hasImportant ? style[p][1] : ""
+          .forEach(p => {
+            let attr = p.replace(/([A-Z])/g, "-$1").toLowerCase()
+            let hasImportant = style[p] instanceof Array
+            let prop = hasImportant ? style[p][0] : style[p]
+            let important = hasImportant ? style[p][1] : ""
 
-          element.style.setProperty(attr, prop, important)
-        })
+            element.style.setProperty(attr, prop, important)
+          })
       }
     }
   }, options)
@@ -151,7 +151,8 @@ export const Plume = (view, model = {}, options = {}, $root = undefined) => {
     const updateProp = ($$el, name, newProp, oldProp) => {
       if (!newProp)
         $$el.removeAttribute(name)
-      else if (!oldProp || newProp !== oldProp) {
+      else if (!oldProp || newProp !== oldProp && (!new DeepProxy().compare(oldProp, newProp) || newProp instanceof Function)) {
+        console.log(name, oldProp, newProp)
         setProp($$el, name, newProp)
       }
     }
