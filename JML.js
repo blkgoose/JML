@@ -163,6 +163,12 @@ export const option = (p = {}, c = []) => el('option', p, c)
  * @param {Array<PlumeElement>} c
  */
 export const i = (p = {}, c = []) => el('i', p, c)
+// basic HTML elements
+/**
+ * @param {Object<string,*>} p
+ * @param {Array<PlumeElement>} c
+ */
+export const svg = (p = {}, c = []) => el('svg', p, c)
 
 
 
